@@ -1,0 +1,56 @@
+.tree {
+    flex: 1 1;
+    padding: 0.5em;
+    background-color: #FFF;
+    box-shadow: 2px 1px 3px #000;
+    z-index: 1000;
+}
+
+ul {
+    outline: none;
+    text-align: left;
+    height: 100%;
+    list-style: none;
+}
+
+li {
+    position: relative;
+    padding: 0.5em;
+    border-radius: 5px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /*transition: all 0.2s ease-in-out;*/
+}
+
+li:hover {
+    cursor: pointer;
+}
+
+.selected {
+    background-color: #51C7AE;
+    font-weight: 600;
+}
+
+.arrow-right {
+    position: absolute;
+    top: 11px;
+    right: 5px;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 6px solid black;
+}
+
+.arrow-down {
+    position: absolute;
+    right: 5px;
+    top: 14px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid black;
+}

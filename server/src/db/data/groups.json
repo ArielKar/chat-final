@@ -1,0 +1,19 @@
+{
+  "1000": {
+    "_id": "1000",
+    "name": "Friends",
+    "parent": null,
+    "isPrivate": false
+  },
+  "1001": {
+    "_id": "1001",
+    "name": "Best Friends",
+    "parent": "1000",
+    "isPrivate": false
+  },
+  "1002": {
+    "_id": "1002",
+    "parent": null,
+    "isPrivate": true
+  }
+}

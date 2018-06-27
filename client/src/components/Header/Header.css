@@ -1,0 +1,66 @@
+.header {
+    background: url("https://www.toptal.com/designers/subtlepatterns/patterns/what-the-hex-dark.png") repeat;
+    color: #fff;
+    box-shadow: 2px 2px 3px #000;
+    z-index: 10000;
+    text-align: start;
+    padding: 0.2em 0.5em;
+}
+
+.logo {
+    display: inline-block;
+}
+
+.logo img{
+    height: 50px;
+}
+
+.logged-user {
+    display: inline-block;
+    color: #25B99A;
+    margin-left: 1em;
+}
+
+.logged-user-name {
+    color: #FFFFFF;
+}
+
+.dots-wrapper {
+    box-sizing: border-box;
+    float: right;
+    width: 2em;
+    cursor: pointer;
+    padding: 0.5em 0.2em 0.5em 0.2em;
+    outline: none;
+}
+
+.dot {
+    width: 20px;
+    height: 20px;
+    margin: auto auto;
+    background-image: radial-gradient(circle at center, #25B99A 7px, transparent 7px);
+    background-size: 20px 20px;
+}
+
+.menu {
+    position: absolute;
+    right: 5px;
+    top: 90px;
+    background-color: #FFF;
+    color: black;
+    border: 1px solid #25B99A;
+    border-radius: 10px;
+    padding: 1em 0 1em 0;
+    width: 8em;
+}
+
+.menu .new-group-item {
+    border-radius: 0;
+    color: #FFFFFF;
+    background-color: #25B99A;
+}
+
+.menu li:hover {
+    border-radius: 0;
+    background-color: #CCCCCC;
+}

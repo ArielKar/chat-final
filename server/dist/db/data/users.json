@@ -1,0 +1,32 @@
+{
+  "1529477863207": {
+    "_id": "1529477863207",
+    "name": "Ariel",
+    "age": 30,
+    "password": "$2b$10$wUnwGMGzruwwmjF5QnA3ruZbVTcGanXC3PQgs/OJ7NxGJrOWzR2n."
+  },
+  "1529736662109": {
+    "_id": "1529736662109",
+    "name": "Ori",
+    "age": 20,
+    "password": "$2b$10$4FZiHvHNVSfG4EPoUGTJFOhvsKnl7UbzVrFZevyYBl1ALEtVnq2Tq"
+  },
+  "1529736686410": {
+    "_id": "1529736686410",
+    "name": "Roni",
+    "age": 20,
+    "password": "$2b$10$XgTA7ipw3as9TX0nd3uTQ.ZSuEBQGJGV.2A0JIGdit9BtkH1hoUTa"
+  },
+  "1529736694065": {
+    "_id": "1529736694065",
+    "name": "Udi",
+    "age": 20,
+    "password": "$2b$10$jX28XYYUlyh6vq9/F2LNj.U/hrS0N5zEzpgsP3kDg9I7naZYEcB6q"
+  },
+  "1529736698981": {
+    "_id": "1529736698981",
+    "name": "Tommy",
+    "age": 20,
+    "password": "$2b$10$H80fFXfmNKTrqjAZZsGzGu1yS64LVNEU1dm9DioF4Wk1yp1a2doNW"
+  }
+}

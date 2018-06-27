@@ -1,0 +1,23 @@
+{
+  "1000": {
+    "_id": "1000",
+    "sender": "1000",
+    "recipient": "1001",
+    "body": "This is a message from ariel",
+    "time": "01:43 AM"
+  },
+  "1001": {
+    "_id": "1001",
+    "sender": "1001",
+    "recipient": "1000",
+    "body": "This is a response from shai",
+    "time": "01:57 AM"
+  },
+  "1002": {
+    "_id": "1002",
+    "sender": "1003",
+    "recipient": "1001",
+    "body": "shimi is the man",
+    "time": "06:23 AM"
+  }
+}

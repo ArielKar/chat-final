@@ -1,0 +1,18 @@
+{
+  "1529407994196": [
+    {
+      "_id": "1000",
+      "sender": "Ariel",
+      "recipient": "1529407994196",
+      "body": "This is a message from ariel",
+      "time": "01:43 AM"
+    },
+    {
+      "_id": "1001",
+      "sender": "Shai",
+      "recipient": "1529407994196",
+      "body": "This is a response from shai",
+      "time": "01:57 AM"
+    }
+  ]
+}

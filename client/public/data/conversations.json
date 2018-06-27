@@ -1,0 +1,56 @@
+{
+  "1000": [
+    {
+      "type": "sent",
+      "sender": "Friend1",
+      "messageBody": "Friend 1 is now talking",
+      "time": "good time"
+    },
+    {
+      "type": "received",
+      "sender": "Friend2",
+      "messageBody": "Friend 2 answer",
+      "time": "good time"
+    },
+    {
+      "type": "sent",
+      "sender": "Friend3",
+      "messageBody": "this is a message",
+      "time": "good time"
+    },
+    {
+      "type": "received",
+      "sender": "Friend23",
+      "messageBody": "this is a message",
+      "time": "good time"
+    },
+    {
+      "type": "received",
+      "sender": "Friend65",
+      "messageBody": "this is a message",
+      "time": "good time"
+    }
+  ],
+  "1001": [
+    {
+      "type": "received",
+      "sender": "Person1",
+      "messageBody": "this is a message",
+      "time": "good time"
+    },
+    {
+      "type": "sent",
+      "sender": "Person2",
+      "messageBody": "this is a message",
+      "time": "good time"
+    }
+  ],
+  "1002": [
+    {
+      "type": "sent",
+      "sender": "Contact",
+      "messageBody": "this is a message",
+      "time": "good time"
+    }
+  ]
+}

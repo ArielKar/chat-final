@@ -1,0 +1,26 @@
+{
+  "1000": {
+    "_id": 1000,
+    "name": "ariel",
+    "age": 30,
+    "password": 123
+  },
+  "1001": {
+    "_id": 1001,
+    "name": "ohad",
+    "age": 30,
+    "password": 123
+  },
+  "1002": {
+    "_id": 1002,
+    "name": "shai",
+    "age": 30,
+    "password": 123
+  },
+  "1003": {
+    "_id": 1003,
+    "name": "shimi",
+    "age": 30,
+    "password": 123
+  }
+}

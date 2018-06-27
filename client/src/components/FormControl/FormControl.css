@@ -1,0 +1,13 @@
+.form-control {
+    margin: 1em;
+}
+
+.form-control input, .form-control select {
+    height: 2em;
+    width: 80%;
+    margin-left: 1em;
+    padding: 0 0 0 0.6em;
+    outline: none;
+    border: 1px solid #67CEB8;
+    border-radius: 5px;
+}
