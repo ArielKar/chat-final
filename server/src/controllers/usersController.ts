@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import * as services from '../services';
+import {removePassword} from "../helpers/utils";
 
 
 //TODO: req.body and params validation
@@ -7,10 +8,10 @@ class UsersController {
 
     static async getAllUsers(req: Request, res: Response) {
         try {
-            const data = await services.UserService.getAll();
+            const users = await services.UserService.getAll();
             res.status(200).json({
                 message: 'Fetched all users',
-                data: data
+                data: users.map(removePassword)
             });
         } catch (err) {
             console.log('In getAllUsers', err.message);
@@ -22,10 +23,10 @@ class UsersController {
 
     static async getUserById(req: Request, res: Response) {
         try {
-            const data = await services.UserService.getUser(req.params.userId);
+            const user = await services.UserService.getUser(req.params.userId);
             res.status(200).json({
                 message: 'Fetched one user',
-                data: data
+                data: removePassword(user)
             });
         } catch (err) {
             console.log('In getUserById', err.message);
@@ -40,7 +41,7 @@ class UsersController {
             const addedUser = await services.UserService.addUser(req.body);
             res.status(200).json({
                 message: 'Added user',
-                data: addedUser
+                data: removePassword(addedUser)
             });
         } catch (err) {
             console.log('In add user: ', err.message);
@@ -55,7 +56,7 @@ class UsersController {
             const updatedUser = await services.UserService.updateUser(req.params.userId, req.body);
             res.status(200).json({
                 message: 'User updated',
-                data: updatedUser
+                data: removePassword(updatedUser)
             });
         } catch (err) {
             console.log('In updateUserById: ', err.message);
@@ -73,7 +74,7 @@ class UsersController {
             });
         } catch (err) {
             console.log("In deleteUserById", err.message);
-            res.status(500).json({
+            res.status(err.status || 500).json({
                 error: err.message
             });
         }
@@ -84,7 +85,7 @@ class UsersController {
             const result = await services.UserService.authenticate(req.body);
             res.status(200).json({
                 message: 'Logged in successfully',
-                user: result.foundUser,
+                user: removePassword(result.foundUser),
                 token: result.token
             });
         } catch (err) {

@@ -63,7 +63,7 @@ class UserService {
     async deleteUser(userId): Promise<boolean> {
         const users = await this.usersDataHandler.readFile();
         if (!users[userId]) {
-            throw new Error('Invalid request: user does not exist');
+            throw new CustomError('Invalid request: user does not exist', 404);
         }
         delete users[userId];
         const writeResult = await this.usersDataHandler.writeFile(users);

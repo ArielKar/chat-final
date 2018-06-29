@@ -3,13 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function generateTree(groups, groupsToGroups, users, groupsToUsers, userData) {
     var tree = [];
     for (var group in groups) {
-        console.log("working on a group in groups of id: " + group);
-        console.log("===============================");
         if (!groups[group].hasOwnProperty('parent') || !groups[group].parent) {
-            console.log("raw group in db is :", groups[group]);
             var reducedGroup = reduceGroup(groups[group]);
             if (groupsToGroups[group]) {
-                console.log(reducedGroup);
                 reducedGroup.items = groupsToGroups[group].map(function (groupId) { return reduceGroup(groups[groupId]); });
                 populateChildren(reducedGroup);
             }

@@ -3,21 +3,26 @@ import {events} from "../../util/events";
 function ChatTree(element) {
     const TREE_LEVEL = 0;
     const state = {
-        isLoaded: false,
-        selectedElement: element,
-        counter: 1000
+        // isLoaded: false,
+        selectedElement: element
     };
 
     function load(items) {
-        if (state.isLoaded) {
-            return;
-        }
+        // if (state.isLoaded) {
+        //     return;
+        // }
+        console.log(element);
+        console.log(items);
         element.addEventListener('keydown', handleEvent);
         element.addEventListener('dblclick', handleEvent);
         render(items, element, TREE_LEVEL);
-        element.firstChild.className = 'selected';
-        state.isLoaded = true;
-        setSelectedElement(element.firstChild);
+        console.log(element);
+        console.log(element.firstChild);
+        if (element.firstChild) {
+            element.firstChild.className = 'selected';
+            // state.isLoaded = true;
+            setSelectedElement(element.firstChild);
+        }
     }
 
     function render(items, appendAfter, indentLevel) {
@@ -29,9 +34,9 @@ function ChatTree(element) {
     }
 
     function append(appendAfter, newElem) {
-        if (!state.isLoaded) {
+        if (appendAfter === element) {
             appendAfter.appendChild(newElem);
-            state.isLoaded = true;
+        //     state.isLoaded = true;
             return;
         }
         appendAfter.after(newElem);
@@ -155,9 +160,9 @@ function ChatTree(element) {
 
     function clear() {
         element.innerHTML = '';
-        state.isLoaded = false;
+        // state.isLoaded = false;
         state.selectedElement = element;
-        setSelectedElement(element);
+        // setSelectedElement(element);
     }
 
     return {

@@ -4,6 +4,7 @@
     background-color: #FFF;
     box-shadow: 2px 1px 3px #000;
     z-index: 1000;
+    overflow-y: scroll;
 }
 
 ul {

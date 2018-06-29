@@ -113,6 +113,7 @@ class Store {
     }
 
     emit(): void {
+        console.log("should update");
         this.subscriptions.forEach(sub => sub(this.state));
     }
 }

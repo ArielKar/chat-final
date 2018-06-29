@@ -36,23 +36,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var services = require("../services");
+var utils_1 = require("../helpers/utils");
 //TODO: req.body and params validation
 var UsersController = /** @class */ (function () {
     function UsersController() {
     }
     UsersController.getAllUsers = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, err_1;
+            var users, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, services.UserService.getAll()];
                     case 1:
-                        data = _a.sent();
+                        users = _a.sent();
                         res.status(200).json({
                             message: 'Fetched all users',
-                            data: data
+                            data: users.map(utils_1.removePassword)
                         });
                         return [3 /*break*/, 3];
                     case 2:
@@ -69,17 +70,17 @@ var UsersController = /** @class */ (function () {
     };
     UsersController.getUserById = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, err_2;
+            var user, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, services.UserService.getUser(req.params.userId)];
                     case 1:
-                        data = _a.sent();
+                        user = _a.sent();
                         res.status(200).json({
                             message: 'Fetched one user',
-                            data: data
+                            data: utils_1.removePassword(user)
                         });
                         return [3 /*break*/, 3];
                     case 2:
@@ -106,7 +107,7 @@ var UsersController = /** @class */ (function () {
                         addedUser = _a.sent();
                         res.status(200).json({
                             message: 'Added user',
-                            data: addedUser
+                            data: utils_1.removePassword(addedUser)
                         });
                         return [3 /*break*/, 3];
                     case 2:
@@ -133,7 +134,7 @@ var UsersController = /** @class */ (function () {
                         updatedUser = _a.sent();
                         res.status(200).json({
                             message: 'User updated',
-                            data: updatedUser
+                            data: utils_1.removePassword(updatedUser)
                         });
                         return [3 /*break*/, 3];
                     case 2:
@@ -165,7 +166,7 @@ var UsersController = /** @class */ (function () {
                     case 2:
                         err_5 = _a.sent();
                         console.log("In deleteUserById", err_5.message);
-                        res.status(500).json({
+                        res.status(err_5.status || 500).json({
                             error: err_5.message
                         });
                         return [3 /*break*/, 3];
@@ -186,7 +187,7 @@ var UsersController = /** @class */ (function () {
                         result = _a.sent();
                         res.status(200).json({
                             message: 'Logged in successfully',
-                            user: result.foundUser,
+                            user: utils_1.removePassword(result.foundUser),
                             token: result.token
                         });
                         return [3 /*break*/, 3];

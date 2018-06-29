@@ -141,7 +141,7 @@ var UserService = /** @class */ (function () {
                     case 1:
                         users = _a.sent();
                         if (!users[userId]) {
-                            throw new Error('Invalid request: user does not exist');
+                            throw new customError_1.default('Invalid request: user does not exist', 404);
                         }
                         delete users[userId];
                         return [4 /*yield*/, this.usersDataHandler.writeFile(users)];

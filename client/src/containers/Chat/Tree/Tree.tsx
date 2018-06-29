@@ -28,6 +28,7 @@ class Tree extends React.Component<ITreeProps, {}> {
         const nextTreeData = this.props.tree;
         if (!!nextTreeData && this.data !== nextTreeData) {
             this.data = nextTreeData;
+            this.tree.clear();
             this.tree.load(this.data);
         }
     }
@@ -43,7 +44,7 @@ class Tree extends React.Component<ITreeProps, {}> {
     render() {
         return (
             <div className="tree">
-                <ul tabIndex={0} ref={this.listElement} />
+                <ul tabIndex={0} ref={this.listElement}/>
             </div>
         );
     }

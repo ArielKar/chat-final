@@ -39,7 +39,7 @@ class GroupsController {
         try {
             const data = await services.GroupsService.getTree(req.userAuth);
             res.status(200).json({
-                message:'Fetched tree data',
+                message: 'Fetched tree data',
                 data
             });
         } catch (err) {
@@ -82,7 +82,17 @@ class GroupsController {
     }
 
     static async deleteGroupById(req: Request, res: Response) {
-        //    TODO: implement
+        try {
+            await services.GroupsService.deleteGroup(req.params.groupId);
+            res.status(200).json({
+                message: "Group deleted successfully"
+            });
+        } catch (err) {
+            console.log("In deleteGroup: ", err);
+            res.status(err.status || 500).json({
+                error: err.message
+            });
+        }
     }
 }
 

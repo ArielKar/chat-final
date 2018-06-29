@@ -5,7 +5,7 @@ import './Header.css';
 import Button from "../Button/Button";
 import {IHeaderProps} from "../../entities";
 import store from "../../appStore/store";
-import {LOGOUT, SET_MODE} from "../../appStore/actions";
+import {LOGOUT, SET_MODE, deleteGroup} from "../../appStore/actions";
 import {Component} from "react";
 
 class Header extends Component<IHeaderProps, any> {
@@ -41,6 +41,7 @@ class Header extends Component<IHeaderProps, any> {
 
     deleteSelectedItem = () => {
         this.menuElement.current.blur();
+        store.dispatch(deleteGroup());
     };
 
     render() {

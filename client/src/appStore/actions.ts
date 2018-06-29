@@ -1,4 +1,5 @@
 import * as serverAPI from '../serverApi/serverAPI';
+import store from './store';
 
 export const LOGIN = "LOGIN";
 export const LOGOUT = "LOGOUT";
@@ -39,6 +40,13 @@ export function addNewMessage(msgArray) {
 export function addNewGroup(newGroup) {
     return async function(dispatch: Function) {
         const addedGroup = await serverAPI.postGroup(newGroup);
+        await serverAPI.getTree();
+    }
+}
+
+export function deleteGroup() {
+    return async function(dispatch: Function) {
+        await serverAPI.deleteGroup();
         await serverAPI.getTree();
     }
 }

@@ -180,8 +180,27 @@ var GroupsController = /** @class */ (function () {
     };
     GroupsController.deleteGroupById = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
+            var err_6;
             return __generator(this, function (_a) {
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, services.GroupsService.deleteGroup(req.params.groupId)];
+                    case 1:
+                        _a.sent();
+                        res.status(200).json({
+                            message: "Group deleted successfully"
+                        });
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_6 = _a.sent();
+                        console.log("In deleteGroup: ", err_6);
+                        res.status(err_6.status || 500).json({
+                            error: err_6.message
+                        });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
             });
         });
     };

@@ -112,9 +112,6 @@ var GroupsService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        // TODO: check if already name of group exist on same level
-                        console.log(rawNewGroup);
-                        console.log("---------------------------");
                         name = rawNewGroup.name, parent = rawNewGroup.parent, isPrivate = rawNewGroup.isPrivate, usersOfNewGroup = rawNewGroup.users;
                         newGroup = { _id: uuidv4(), name: name, parent: parent, isPrivate: isPrivate };
                         return [4 /*yield*/, this.groupsDataHandler.readFile()];
@@ -129,25 +126,17 @@ var GroupsService = /** @class */ (function () {
                     case 3:
                         groupsToGroups = _a.sent();
                         groupsToGroups[newGroup._id] = [];
+                        if (newGroup.parent) {
+                            groupsToGroups[newGroup.parent].push(newGroup._id);
+                        }
                         self = this;
-                        console.log("USERS OF NEW GROUP: ", usersOfNewGroup);
                         return [4 /*yield*/, Promise.all(usersOfNewGroup.map(function (userId) { return __awaiter(_this, void 0, void 0, function () {
                                 var newPrivateGroup;
                                 return __generator(this, function (_a) {
-                                    // if (userId === userAuth.id) {
-                                    //     return;
-                                    // }
-                                    // creating private group for each userId
-                                    console.log(userId);
                                     newPrivateGroup = { _id: uuidv4(), isPrivate: true, name: null, parent: newGroup._id };
-                                    console.log(newPrivateGroup);
-                                    // const groups = await self.groupsDataHandler.readFile();
                                     groups[newPrivateGroup._id] = newPrivateGroup;
-                                    // await self.groupsDataHandler.writeFile(groups);
                                     // creating association in groupsToUsers
-                                    // const groupsToUsers = await self.groupsToUsersDataHandler.readFile();
                                     groupsToUsers[newPrivateGroup._id] = [userId, userAuth.id];
-                                    // await self.groupsToUsersDataHandler.writeFile(groupsToUsers);
                                     // creating association between parentGroup to privateGroup in GroupsToGroups
                                     groupsToGroups[newGroup._id].push(newPrivateGroup._id);
                                     return [2 /*return*/];
@@ -164,22 +153,63 @@ var GroupsService = /** @class */ (function () {
                         return [4 /*yield*/, self.groupsDataHandler.writeFile(groups)];
                     case 7:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2 /*return*/, newGroup];
                 }
             });
         });
     };
-    GroupsService.prototype.updateGroup = function () {
+    GroupsService.prototype.updateGroup = function (updatedGroup) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/];
             });
         });
     };
-    GroupsService.prototype.deleteGroup = function () {
+    GroupsService.prototype.deleteGroup = function (groupId) {
         return __awaiter(this, void 0, void 0, function () {
+            var groups, groupToDelete, groupsToUsers, groupsToGroups, index;
+            var _this = this;
             return __generator(this, function (_a) {
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.groupsDataHandler.readFile()];
+                    case 1:
+                        groups = _a.sent();
+                        groupToDelete = groups[groupId];
+                        delete groups[groupToDelete._id];
+                        return [4 /*yield*/, this.groupsToUsersDataHandler.readFile()];
+                    case 2:
+                        groupsToUsers = _a.sent();
+                        delete groupsToUsers[groupToDelete._id];
+                        return [4 /*yield*/, this.groupsToGroupsDataHandler.readFile()];
+                    case 3:
+                        groupsToGroups = _a.sent();
+                        if (!groupsToGroups[groupToDelete._id]) return [3 /*break*/, 5];
+                        return [4 /*yield*/, Promise.all(groupsToGroups[groupToDelete._id].map(function (groupId) { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    delete groups[groupId];
+                                    return [2 /*return*/];
+                                });
+                            }); }))];
+                    case 4:
+                        _a.sent();
+                        delete groupsToGroups[groupToDelete._id];
+                        _a.label = 5;
+                    case 5:
+                        if (groupToDelete.parent) {
+                            index = groupsToGroups[groupToDelete.parent].findIndex(function (group) { return group === groupToDelete._id; });
+                            groupsToGroups[groupToDelete.parent].splice(index, 1);
+                        }
+                        return [4 /*yield*/, this.groupsDataHandler.writeFile(groups)];
+                    case 6:
+                        _a.sent();
+                        return [4 /*yield*/, this.groupsToUsersDataHandler.writeFile(groupsToUsers)];
+                    case 7:
+                        _a.sent();
+                        return [4 /*yield*/, this.groupsToGroupsDataHandler.writeFile(groupsToGroups)];
+                    case 8:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
             });
         });
     };

@@ -8,7 +8,7 @@ export interface IUser {
 }
 
 export interface IGroup {
-    _id: number,
+    _id: string,
     name?: string,
     parent?: string,
     isPrivate: boolean

@@ -44,83 +44,75 @@ class GroupsService {
         return privateGroups;
     }
 
-    async addGroup(rawNewGroup, userAuth)/*: Promise<IGroup>*/ {
+    async addGroup(rawNewGroup, userAuth): Promise<IGroup> {
         // TODO: check if already name of group exist on same level
-        console.log(rawNewGroup);
-        console.log("---------------------------");
         const {name, parent, isPrivate, users: usersOfNewGroup} = rawNewGroup;
 
         // creating new parent group
         const newGroup = {_id: uuidv4(), name, parent, isPrivate};
         const groups = await this.groupsDataHandler.readFile();
         groups[newGroup._id] = newGroup;
-        // await this.groupsDataHandler.writeFile(groups);
 
         // creating groupsToUsers association for the new group
         const groupsToUsers = await this.groupsToUsersDataHandler.readFile();
         groupsToUsers[newGroup._id] = usersOfNewGroup.concat([userAuth.id]);
-        // await this.groupsToUsersDataHandler.writeFile(groupsToUsers);
 
         // creating users array for newGroup
         const groupsToGroups = await this.groupsToGroupsDataHandler.readFile();
         groupsToGroups[newGroup._id] = [];
-
+        if (newGroup.parent) {
+            groupsToGroups[newGroup.parent].push(newGroup._id);
+        }
         // creating a private group for each user of usersOfGroup
         const self = this;
-        console.log("USERS OF NEW GROUP: ", usersOfNewGroup);
         await Promise.all(usersOfNewGroup.map(async (userId) => {
-            // if (userId === userAuth.id) {
-            //     return;
-            // }
+
             // creating private group for each userId
-            console.log(userId);
             const newPrivateGroup = {_id: uuidv4(), isPrivate: true, name: null, parent: newGroup._id};
-            console.log(newPrivateGroup);
-            // const groups = await self.groupsDataHandler.readFile();
             groups[newPrivateGroup._id] = newPrivateGroup;
-            // await self.groupsDataHandler.writeFile(groups);
 
             // creating association in groupsToUsers
-            // const groupsToUsers = await self.groupsToUsersDataHandler.readFile();
             groupsToUsers[newPrivateGroup._id] = [userId, userAuth.id];
-            // await self.groupsToUsersDataHandler.writeFile(groupsToUsers);
 
             // creating association between parentGroup to privateGroup in GroupsToGroups
             groupsToGroups[newGroup._id].push(newPrivateGroup._id);
-            // await self.groupsToGroupsDataHandler.writeFile(groupsToGroups);
         }));
         await self.groupsToGroupsDataHandler.writeFile(groupsToGroups);
         await self.groupsToUsersDataHandler.writeFile(groupsToUsers);
         await self.groupsDataHandler.writeFile(groups);
 
-
-
-
-
-
-        // const newGroup: IGroup = Object.assign({_id: Date.now()}, {name, isPrivate, parent});
-        // const groups = await this.groupsDataHandler.readFile();
-        // groups[newGroup._id] = newGroup;
-        // // associate newGroup and its parent
-        // if (newGroup.parent) {
-        //     const groupsToGroups = await this.groupsToGroupsDataHandler.readFile();
-        //     groupsToGroups[newGroup.parent] = groupsToGroups[newGroup.parent] ? groupsToGroups[newGroup.parent].push(newGroup._id) : [newGroup._id];
-        //     await this.groupsToGroupsDataHandler.writeFile(groupsToGroups);
-        // }
-        // // associate newGroup and its users
-        // const groupsToUsers = await this.groupsToUsersDataHandler.readFile();
-        // groupsToUsers[newGroup._id] = usersOfNewGroup;
-        // await this.groupsToUsersDataHandler.writeFile(groupsToUsers);
-        // await this.groupsDataHandler.writeFile(groups);
-        // return newGroup;
+        return newGroup;
     }
 
-    async updateGroup() {
+    async updateGroup(updatedGroup) {
 
     }
 
-    async deleteGroup() {
+    async deleteGroup(groupId) {
+        // delete the group from groups
+        const groups = await this.groupsDataHandler.readFile();
+        const groupToDelete = groups[groupId];
+        delete groups[groupToDelete._id];
 
+        // delete group to users assoc.
+        const groupsToUsers = await this.groupsToUsersDataHandler.readFile();
+        delete groupsToUsers[groupToDelete._id];
+
+        // delete group to group assoc.
+        const groupsToGroups = await this.groupsToGroupsDataHandler.readFile();
+        if (groupsToGroups[groupToDelete._id]) {
+            await Promise.all(groupsToGroups[groupToDelete._id].map(async (groupId) => {
+                delete groups[groupId];
+            }));
+            delete groupsToGroups[groupToDelete._id];
+        }
+        if (groupToDelete.parent) {
+            let index = groupsToGroups[groupToDelete.parent].findIndex(group => group === groupToDelete._id);
+            groupsToGroups[groupToDelete.parent].splice(index, 1);
+        }
+        await this.groupsDataHandler.writeFile(groups);
+        await this.groupsToUsersDataHandler.writeFile(groupsToUsers);
+        await this.groupsToGroupsDataHandler.writeFile(groupsToGroups);
     }
 }
 

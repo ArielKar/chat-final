@@ -24,6 +24,7 @@ class App extends React.Component<{}, IAppState> {
         };
 
         Store.subscribe(({user: nextUser, tree: nextTree, conversation: nextConversation, messages: nextMessages}: IAppState) => {
+            console.log('updating');
             this.setState({
                 user: nextUser,
                 tree: nextTree,

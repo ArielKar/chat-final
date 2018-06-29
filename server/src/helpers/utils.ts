@@ -1,13 +1,9 @@
 export function generateTree(groups, groupsToGroups, users, groupsToUsers, userData) {
     const tree = [];
     for (let group in groups) {
-        console.log("working on a group in groups of id: " + group);
-        console.log("===============================");
         if (!groups[group].hasOwnProperty('parent') || !groups[group].parent) {
-            console.log("raw group in db is :", groups[group]);
             let reducedGroup = reduceGroup(groups[group]);
             if (groupsToGroups[group]) {
-                console.log(reducedGroup);
                 reducedGroup.items = groupsToGroups[group].map(groupId => reduceGroup(groups[groupId]));
                 populateChildren(reducedGroup);
             }

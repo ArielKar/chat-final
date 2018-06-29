@@ -3,17 +3,16 @@ import './Login.css';
 
 import FormControl from "../../components/FormControl/FormControl";
 import Button from "../../components/Button/Button";
-// import AuthHandler from "../../appStore/authHandler";
 import {login} from '../../serverApi/serverAPI';
 import {ChangeEvent} from "react";
 
-// interface ILoginState {
-//     usernameInput: string,
-//     passwordInput: string,
-//     isValid: boolean
-// }
+interface ILoginState {
+    usernameInput?: string,
+    passwordInput?: string,
+    isValid: boolean
+}
 
-class Login extends React.Component<any, any> {
+class Login extends React.Component<any, ILoginState> {
     errorMsg: string;
     constructor(props: {}) {
         super(props);
@@ -39,16 +38,7 @@ class Login extends React.Component<any, any> {
             });
             return;
         }
-
         login(this.state.usernameInput, this.state.passwordInput);
-        // if (AuthHandler.authenticate(this.state.usernameInput, this.state.passwordInput)) {
-        //     return;
-        // } else {
-        //     this.errorMsg = 'oh oh, invalid credentials';
-        //     this.setState({
-        //         isValid: false
-        //     });
-        // }
     };
 
     render() {

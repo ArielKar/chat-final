@@ -120,3 +120,17 @@ export async function postGroup(newGroup) {
         console.log(err.message);
     }
 }
+
+export async function deleteGroup() {
+    try {
+        const {token, conversation} = store.getState();
+        const deleteResponse = await fetch(`${BASE_URL}/groups/${conversation}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+    } catch (err) {
+        console.log(err.message);
+    }
+}
