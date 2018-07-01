@@ -1,0 +1,39 @@
+.user-manager {
+    flex: 3;
+    max-width: 74%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 2em;
+    background: url('https://www.toptal.com/designers/subtlepatterns/patterns/what-the-hex.png') repeat;
+    overflow-y: scroll;
+}
+
+.add-user form {
+    border: 1px solid #25B99A;
+    border-radius: 5px;
+}
+
+.user-item {
+    border: 1px solid #25B99A;
+    margin: 0.2em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.user-item-details {
+    flex: 1;
+    margin: 1em;
+}
+
+.user-item-edit .form-control {
+    margin: 0;
+    text-align: center;
+}
+
+.user-item-buttons {
+    display: inline-block;
+    margin-right: 1em;
+}

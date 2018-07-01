@@ -12,6 +12,7 @@ export const SET_MESSAGES = "SET_MESSAGES";
 export const ADD_MESSAGE = "ADD_MESSAGE";
 export const SET_MODE = "SET_MODE";
 export const SET_USERS = "SET_USERS";
+export const SET_USERS_GROUP = "SET_USERS_GROUP";
 
 export function setConversation(selectedElementID: Number) {
     return async function(dispatch: Function) {
@@ -21,10 +22,17 @@ export function setConversation(selectedElementID: Number) {
     }
 }
 
+export function setConversationUsers(selectedElement) {
+    return async function(dispatch: Function) {
+        const users = await serverAPI.getUserOfGroup(selectedElement.id);
+        console.log(users);
+        dispatch({type: SET_USERS_GROUP, payload: {users}});
+    }
+}
+
 export function getPrivateGroups() {
     return async function(dispatch: Function) {
         const users = await serverAPI.getPrivateGroups();
-        console.log(users);
         dispatch({type: SET_USERS, payload: {users}})
     }
 }
@@ -44,9 +52,25 @@ export function addNewGroup(newGroup) {
     }
 }
 
+export function updateGroup(groupToUpdate: object) {
+    return async function(dispatch: Function) {
+        const updatedGroup = await serverAPI.updateGroup(groupToUpdate);
+        await serverAPI.getTree();
+    }
+}
+
 export function deleteGroup() {
     return async function(dispatch: Function) {
         await serverAPI.deleteGroup();
         await serverAPI.getTree();
+    }
+}
+
+export function updateUser(changedUser) {
+    return async function(dispatch: Function) {
+        const updatedUser = await serverAPI.updateUser(changedUser);
+        const users = await serverAPI.getPrivateGroups();
+        dispatch({type: SET_USERS, payload: {users}})
+
     }
 }

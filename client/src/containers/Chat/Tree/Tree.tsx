@@ -35,6 +35,7 @@ class Tree extends React.Component<ITreeProps, {}> {
 
     onTreeElementSelected = (selectedElementID: number) => {
         store.dispatch(actionTypes.setConversation(selectedElementID));
+        store.dispatch(actionTypes.setConversationUsers(selectedElementID));
     };
 
     componentWillUnmount() {

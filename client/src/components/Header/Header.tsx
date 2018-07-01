@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import './Header.css';
 
-import Button from "../Button/Button";
 import {IHeaderProps} from "../../entities";
 import store from "../../appStore/store";
 import {LOGOUT, SET_MODE, deleteGroup} from "../../appStore/actions";
@@ -28,7 +27,7 @@ class Header extends Component<IHeaderProps, any> {
         });
     };
 
-    closeMenu = () => {
+    closeMenu = (e) => {
         this.setState({
             isMenuShown: false
         });
@@ -52,7 +51,6 @@ class Header extends Component<IHeaderProps, any> {
                 </div>
                 <div className="logged-user">
                     <p>Welcome <span className="logged-user-name">{this.props.user}</span></p>
-                    <Button text={"Logout"} type={"button"} class={"login-btn"} click={this.onLogout}/>
                 </div>
                 <div className="dots-wrapper" ref={this.menuElement} onFocus={this.openMenu} onBlur={this.closeMenu} tabIndex={0}>
                     <div className="dot"/>
@@ -61,10 +59,11 @@ class Header extends Component<IHeaderProps, any> {
                     {this.state.isMenuShown ?
                         <div className="menu">
                             <ul>
-                                <li className="new-group-item" id="newGroup" onClick={this.onMenuItemClicked}>New group</li>
-                                <li id="addUser" onClick={this.onMenuItemClicked}>Add</li>
+                                <li id="manageUsers" onClick={this.onMenuItemClicked}>Manage users</li>
+                                <li id="newGroup" onClick={this.onMenuItemClicked}>New group</li>
                                 <li id="edit" onClick={this.onMenuItemClicked}>Edit</li>
                                 <li id="delete" onClick={this.deleteSelectedItem}>Delete</li>
+                                <li onClick={this.onLogout}>Logout</li>
                             </ul>
                         </div> : null}
                 </div>

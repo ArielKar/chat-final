@@ -46,8 +46,8 @@ class Login extends React.Component<any, ILoginState> {
             <div className="modal">
                 <div className="modal-content">
                     <img src="./logo.png" alt="logo"/>
-                    <FormControl name={"usernameInput"} label={"Username"} onChange={this.handleInputs}/>
-                    <FormControl name={"passwordInput"} label={"Password"} onChange={this.handleInputs}/>
+                    <FormControl name={"usernameInput"} placeholder={"Ariel"} label={"Username"} onChange={this.handleInputs}/>
+                    <FormControl name={"passwordInput"} placeholder={"123456"} label={"Password"} onChange={this.handleInputs}/>
                     <hr/>
                     <Button text={"Login"} type={"button"} class={"login-btn"} click={this.validateLogin} isDisabled={!this.state.isValid}/>
                     {!this.state.isValid ? <p style={{color: 'red'}}>{this.errorMsg}</p> : null}

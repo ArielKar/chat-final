@@ -5,7 +5,7 @@ export const authCheck = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
         const decoded = jwt.verify(token, config.get('JWT_SECRET'));
-        console.log("the decoded: ", decoded);
+        // console.log("the decoded: ", decoded);
         req.userAuth = decoded;
         next();
     } catch (err) {

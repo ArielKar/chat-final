@@ -77,8 +77,18 @@ class GroupsController {
         }
     }
 
-    static async updateGroupById(req: Request, res: Response) {
+    static async updateGroupById(req: RequestWithAuth, res: Response) {
+        try {
+            console.log(req.body);
+            console.log(req.params.groupId);
+            const updatedGroup = await services.GroupsService.updateGroup(req.params.groupId, req.body, req.userAuth);
+            res.status(200).json({
+                message: "group updated",
+                data: updatedGroup
+            });
+        } catch (err) {
 
+        }
     }
 
     static async deleteGroupById(req: Request, res: Response) {

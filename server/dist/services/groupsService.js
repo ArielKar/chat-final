@@ -107,7 +107,7 @@ var GroupsService = /** @class */ (function () {
     };
     GroupsService.prototype.addGroup = function (rawNewGroup, userAuth) {
         return __awaiter(this, void 0, void 0, function () {
-            var name, parent, isPrivate, usersOfNewGroup, newGroup, groups, groupsToUsers, groupsToGroups, self;
+            var name, parent, isPrivate, usersOfNewGroup, newGroup, groups, groupsToUsers, groupsToGroups;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -129,7 +129,7 @@ var GroupsService = /** @class */ (function () {
                         if (newGroup.parent) {
                             groupsToGroups[newGroup.parent].push(newGroup._id);
                         }
-                        self = this;
+                        // creating a private group for each user of usersOfGroup
                         return [4 /*yield*/, Promise.all(usersOfNewGroup.map(function (userId) { return __awaiter(_this, void 0, void 0, function () {
                                 var newPrivateGroup;
                                 return __generator(this, function (_a) {
@@ -143,14 +143,15 @@ var GroupsService = /** @class */ (function () {
                                 });
                             }); }))];
                     case 4:
+                        // creating a private group for each user of usersOfGroup
                         _a.sent();
-                        return [4 /*yield*/, self.groupsToGroupsDataHandler.writeFile(groupsToGroups)];
+                        return [4 /*yield*/, this.groupsToGroupsDataHandler.writeFile(groupsToGroups)];
                     case 5:
                         _a.sent();
-                        return [4 /*yield*/, self.groupsToUsersDataHandler.writeFile(groupsToUsers)];
+                        return [4 /*yield*/, this.groupsToUsersDataHandler.writeFile(groupsToUsers)];
                     case 6:
                         _a.sent();
-                        return [4 /*yield*/, self.groupsDataHandler.writeFile(groups)];
+                        return [4 /*yield*/, this.groupsDataHandler.writeFile(groups)];
                     case 7:
                         _a.sent();
                         return [2 /*return*/, newGroup];
@@ -158,10 +159,53 @@ var GroupsService = /** @class */ (function () {
             });
         });
     };
-    GroupsService.prototype.updateGroup = function (updatedGroup) {
+    GroupsService.prototype.updateGroup = function (idToUpdate, source, userAuth) {
         return __awaiter(this, void 0, void 0, function () {
+            var newName, newUsers, groups, groupToUpdate, groupsToUsers, groupsToGroups;
+            var _this = this;
             return __generator(this, function (_a) {
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        newName = source.name, newUsers = source.users;
+                        return [4 /*yield*/, this.groupsDataHandler.readFile()];
+                    case 1:
+                        groups = _a.sent();
+                        groupToUpdate = groups[idToUpdate];
+                        groupToUpdate.name = newName;
+                        return [4 /*yield*/, this.groupsToUsersDataHandler.readFile()];
+                    case 2:
+                        groupsToUsers = _a.sent();
+                        groupsToUsers[groupToUpdate._id] = groupsToUsers[groupToUpdate._id].concat(newUsers);
+                        return [4 /*yield*/, this.groupsToGroupsDataHandler.readFile()];
+                    case 3:
+                        groupsToGroups = _a.sent();
+                        if (!(newUsers.length !== 0)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, Promise.all(newUsers.map(function (userId) { return __awaiter(_this, void 0, void 0, function () {
+                                var newPrivateGroup;
+                                return __generator(this, function (_a) {
+                                    newPrivateGroup = { _id: uuidv4(), isPrivate: true, name: null, parent: groupToUpdate._id };
+                                    groups[newPrivateGroup._id] = newPrivateGroup;
+                                    // creating association in groupsToUsers
+                                    groupsToUsers[newPrivateGroup._id] = [userId, userAuth.id];
+                                    // creating association between parentGroup to privateGroup in GroupsToGroups
+                                    groupsToGroups[groupToUpdate._id].push(newPrivateGroup._id);
+                                    return [2 /*return*/];
+                                });
+                            }); }))];
+                    case 4:
+                        _a.sent();
+                        _a.label = 5;
+                    case 5: return [4 /*yield*/, this.groupsToGroupsDataHandler.writeFile(groupsToGroups)];
+                    case 6:
+                        _a.sent();
+                        return [4 /*yield*/, this.groupsToUsersDataHandler.writeFile(groupsToUsers)];
+                    case 7:
+                        _a.sent();
+                        return [4 /*yield*/, this.groupsDataHandler.writeFile(groups)];
+                    case 8:
+                        _a.sent();
+                        return [2 /*return*/, groupToUpdate];
+                }
             });
         });
     };
@@ -187,6 +231,7 @@ var GroupsService = /** @class */ (function () {
                         return [4 /*yield*/, Promise.all(groupsToGroups[groupToDelete._id].map(function (groupId) { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     delete groups[groupId];
+                                    delete groupsToUsers[groupId];
                                     return [2 /*return*/];
                                 });
                             }); }))];

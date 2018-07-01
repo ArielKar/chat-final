@@ -6,7 +6,7 @@ const FormControl = (props: IFormControlProps) => {
     return (
         <div className="form-control">
             <p><label htmlFor={props.name}>{props.label}</label></p>
-            <input type="text" name={props.name} onChange={props.onChange}/>
+            <input type="text" name={props.name} onChange={props.onChange} placeholder={props.placeholder}/>
         </div>
     );
 };

@@ -36,6 +36,21 @@ class UsersController {
         }
     }
 
+    static async getUsersByGroup(req: Request, res: Response) {
+        try {
+            const users = await services.UserService.getUsersByGroup(req.params.groupId);
+            res.status(200).json({
+                message: 'Fetched users by group',
+                data: users
+            });
+        } catch (err) {
+            console.log("IN getUsersByGroup", err.message);
+            res.status(500).json({
+                error: err.message
+            });
+        }
+    }
+
     static async addUser(req: Request, res: Response) {
         try {
             const addedUser = await services.UserService.addUser(req.body);

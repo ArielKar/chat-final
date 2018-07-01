@@ -16,7 +16,7 @@ export interface IState {
     token: string | undefined,
     user: {_id: number, name: string, age: number} | undefined,
     tree: object | undefined,
-    conversation: string | undefined,
+    conversation: any | undefined,
     messages: object[] | undefined,
     error: String | undefined,
     mode: String | undefined,
@@ -35,15 +35,17 @@ export interface IActionFunc {
 export interface IAppState {
     user: any | undefined,
     tree: Object | undefined,
-    conversation: number | undefined,
-    messages: Object[] | undefined
+    conversation: any | undefined,
+    messages: Object[] | undefined,
+    mode: string | undefined
 }
 
 export interface IChatProps {
     user: string | undefined,
     tree: Object | undefined,
-    conversation: number | undefined,
-    messages: Object[] | undefined
+    conversation: {id: string, name: string} | undefined,
+    messages: Object[] | undefined,
+    mode: string | undefined
 }
 
 export interface ITreeProps {
@@ -56,7 +58,7 @@ export interface IMessagingState {
 
 export interface IMessagingProps {
     user: string | undefined,
-    conversation: number | undefined,
+    conversation: {id: string, name: string} | undefined,
     messages: Object[] | undefined
 }
 
@@ -79,7 +81,8 @@ export interface IButtonProps {
 export interface IFormControlProps {
     name: string,
     label: string,
-    onChange: (event: ChangeEvent<HTMLInputElement>) => void
+    placeholder: string,
+    onChange?: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
 export interface IHeaderProps {

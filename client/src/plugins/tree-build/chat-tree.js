@@ -11,13 +11,9 @@ function ChatTree(element) {
         // if (state.isLoaded) {
         //     return;
         // }
-        console.log(element);
-        console.log(items);
         element.addEventListener('keydown', handleEvent);
         element.addEventListener('dblclick', handleEvent);
         render(items, element, TREE_LEVEL);
-        console.log(element);
-        console.log(element.firstChild);
         if (element.firstChild) {
             element.firstChild.className = 'selected';
             // state.isLoaded = true;
@@ -155,7 +151,7 @@ function ChatTree(element) {
 
     function setSelectedElement(nextElement) {
         state.selectedElement = nextElement;
-        events.emit('treeElementSelected', state.selectedElement.__id);
+        events.emit('treeElementSelected', {id: state.selectedElement.__id, name: state.selectedElement.innerText});
     }
 
     function clear() {

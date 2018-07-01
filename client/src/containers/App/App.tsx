@@ -20,16 +20,18 @@ class App extends React.Component<{}, IAppState> {
             user: undefined,
             tree: undefined,
             conversation: undefined,
-            messages: undefined
+            messages: undefined,
+            mode: undefined
         };
 
-        Store.subscribe(({user: nextUser, tree: nextTree, conversation: nextConversation, messages: nextMessages}: IAppState) => {
-            console.log('updating');
+        Store.subscribe(({user: nextUser, tree: nextTree, conversation: nextConversation, messages: nextMessages, mode:nextMode}: IAppState) => {
+
             this.setState({
                 user: nextUser,
                 tree: nextTree,
                 conversation: nextConversation,
-                messages: nextMessages
+                messages: nextMessages,
+                mode: nextMode
             });
         });
     }
@@ -44,7 +46,7 @@ class App extends React.Component<{}, IAppState> {
                     <Login/>
                     <div className="App">
                         <Header user={this.state.user}/>
-                        <Chat user={this.state.user} tree={this.state.tree} conversation={this.state.conversation} messages={this.state.messages}/>
+                        <Chat user={this.state.user} tree={this.state.tree} conversation={this.state.conversation} messages={this.state.messages} mode={this.state.mode}/>
                         <Footer/>
                     </div>
                 </>
@@ -58,7 +60,7 @@ class App extends React.Component<{}, IAppState> {
             return (
                 <div className="App">
                     <Header user={this.state.user.name}/>
-                    <Chat user={this.state.user.name} tree={this.state.tree} conversation={this.state.conversation} messages={this.state.messages}/>
+                    <Chat user={this.state.user.name} tree={this.state.tree} conversation={this.state.conversation} messages={this.state.messages} mode={this.state.mode}/>
                     <Footer/>
                 </div>
             );

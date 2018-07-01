@@ -8,9 +8,11 @@ import CustomError from "../helpers/customError";
 
 class UserService {
     readonly usersDataHandler;
+    readonly groupsToUsersDataHandler;
 
     constructor() {
         this.usersDataHandler = new DataHandler('users');
+        this.groupsToUsersDataHandler = new DataHandler('groupsToUsers');
     }
 
     async getAll() {
@@ -41,6 +43,11 @@ class UserService {
         return newUser;
     }
 
+    async getUsersByGroup(groupId) {
+        const groupsToUsers = await this.groupsToUsersDataHandler.readFile();
+        return groupsToUsers[groupId];
+    }
+
     async updateUser(userId, newProps): Promise<IUser> {
         const users = await this.usersDataHandler.readFile();
         const userToUpdate = users[userId];
@@ -48,8 +55,12 @@ class UserService {
             throw new Error('Invalid request: user does not exist');
         }
         for (let prop in newProps) {
-            if (userToUpdate.hasOwnProperty(prop)) {
-                userToUpdate[prop] = newProps[prop];
+            if (userToUpdate.hasOwnProperty(prop) && !!newProps[prop]) {
+                if (prop === "password") {
+                    userToUpdate[prop] = await bcrypt.hash(newProps[prop], 10);
+                } else {
+                    userToUpdate[prop] = newProps[prop];
+                }
             }
         }
         const result = await this.usersDataHandler.writeFile(users);

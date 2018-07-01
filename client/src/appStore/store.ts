@@ -75,6 +75,11 @@ class Store {
                     ...state,
                     conversation: action.payload.conversation
                 };
+            case actionTypes.SET_USERS_GROUP:
+                return {
+                    ...state,
+                    conversation: Object.assign({...state.conversation}, {users: action.payload.users})
+                };
             case actionTypes.SET_MESSAGES:
                 return {
                     ...state,
@@ -113,7 +118,6 @@ class Store {
     }
 
     emit(): void {
-        console.log("should update");
         this.subscriptions.forEach(sub => sub(this.state));
     }
 }

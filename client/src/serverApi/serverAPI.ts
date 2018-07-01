@@ -38,7 +38,7 @@ export async function getTree() {
         });
         if (response.status === 200) {
             const parsedResponse = await response.json();
-            store.dispatch({type: actionTypes.SET_TREE, payload:{tree: parsedResponse.data}});
+            store.dispatch({type: actionTypes.SET_TREE, payload: {tree: parsedResponse.data}});
         }
     } catch (err) {
         store.dispatch({type: actionTypes.SET_ERROR, payload: {error: 'Oh oh, something went wrong'}});
@@ -55,7 +55,7 @@ export async function getMessages() {
             }
         });
         if (response.status === 200) {
-            const messages =  await response.json();
+            const messages = await response.json();
             return new Promise((resolve) => {
                 resolve(messages.data);
             });
@@ -75,14 +75,13 @@ export async function getMessages() {
 export async function getPrivateGroups() {
     try {
         const {token} = store.getState();
-        const usersResponse =  await fetch(`${BASE_URL}/users`, {
-           headers: {
-               Authorization: `Bearer ${token}`
-           }
+        const usersResponse = await fetch(`${BASE_URL}/users`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         });
         if (usersResponse.status === 200) {
             const users = await usersResponse.json();
-            console.log(users.data);
             return new Promise(resolve => {
                 resolve(users.data);
             });
@@ -121,15 +120,65 @@ export async function postGroup(newGroup) {
     }
 }
 
+export async function updateGroup(updatedGroup) {
+    try {
+        const {token, conversation} = store.getState();
+        const updateResponse = await fetch(`${BASE_URL}/groups/${conversation.id}`, {
+            method: "PUT",
+            body: JSON.stringify(updatedGroup),
+            headers: {
+                Authorization: `Brearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+export async function getUserOfGroup(groupId) {
+    try {
+        const {token} = store.getState();
+        const usersResponse = await fetch(`${BASE_URL}/users/group/${groupId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        const users = await usersResponse.json();
+        return users.data;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 export async function deleteGroup() {
     try {
         const {token, conversation} = store.getState();
-        const deleteResponse = await fetch(`${BASE_URL}/groups/${conversation}`, {
+        const deleteResponse = await fetch(`${BASE_URL}/groups/${conversation.id}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+export async function updateUser(changedUser) {
+    try {
+        const {token} = store.getState();
+        const updateResponse = await fetch(`${BASE_URL}/users/${changedUser._id}`, {
+            method: "PUT",
+            body: JSON.stringify(changedUser),
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        });
+        const updatedUser = await  updateResponse.json();
+        return updatedUser.data;
+        
     } catch (err) {
         console.log(err.message);
     }

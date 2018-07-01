@@ -95,9 +95,36 @@ var UsersController = /** @class */ (function () {
             });
         });
     };
+    UsersController.getUsersByGroup = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var users, err_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, services.UserService.getUsersByGroup(req.params.groupId)];
+                    case 1:
+                        users = _a.sent();
+                        res.status(200).json({
+                            message: 'Fetched users by group',
+                            data: users
+                        });
+                        return [3 /*break*/, 3];
+                    case 2:
+                        err_3 = _a.sent();
+                        console.log("IN getUsersByGroup", err_3.message);
+                        res.status(500).json({
+                            error: err_3.message
+                        });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     UsersController.addUser = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var addedUser, err_3;
+            var addedUser, err_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -111,10 +138,10 @@ var UsersController = /** @class */ (function () {
                         });
                         return [3 /*break*/, 3];
                     case 2:
-                        err_3 = _a.sent();
-                        console.log('In add user: ', err_3.message);
+                        err_4 = _a.sent();
+                        console.log('In add user: ', err_4.message);
                         res.status(500).json({
-                            error: err_3.message
+                            error: err_4.message
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -124,7 +151,7 @@ var UsersController = /** @class */ (function () {
     };
     UsersController.updateUserById = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var updatedUser, err_4;
+            var updatedUser, err_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -138,10 +165,10 @@ var UsersController = /** @class */ (function () {
                         });
                         return [3 /*break*/, 3];
                     case 2:
-                        err_4 = _a.sent();
-                        console.log('In updateUserById: ', err_4.message);
+                        err_5 = _a.sent();
+                        console.log('In updateUserById: ', err_5.message);
                         res.status(500).json({
-                            error: err_4.message
+                            error: err_5.message
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -151,7 +178,7 @@ var UsersController = /** @class */ (function () {
     };
     UsersController.deleteUserById = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, err_5;
+            var result, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -164,10 +191,10 @@ var UsersController = /** @class */ (function () {
                         });
                         return [3 /*break*/, 3];
                     case 2:
-                        err_5 = _a.sent();
-                        console.log("In deleteUserById", err_5.message);
-                        res.status(err_5.status || 500).json({
-                            error: err_5.message
+                        err_6 = _a.sent();
+                        console.log("In deleteUserById", err_6.message);
+                        res.status(err_6.status || 500).json({
+                            error: err_6.message
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -177,7 +204,7 @@ var UsersController = /** @class */ (function () {
     };
     UsersController.loginUser = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var result, err_6;
+            var result, err_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -192,9 +219,9 @@ var UsersController = /** @class */ (function () {
                         });
                         return [3 /*break*/, 3];
                     case 2:
-                        err_6 = _a.sent();
-                        res.status(err_6.status || 500).json({
-                            message: err_6.message
+                        err_7 = _a.sent();
+                        res.status(err_7.status || 500).json({
+                            message: err_7.message
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];

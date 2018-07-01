@@ -13,10 +13,11 @@ class NewGroup extends Component<any, any> {
         super(props);
 
         this.state = {
-            name: "",
+            mode: this.props.mode,
+            name: this.props.name,
             insertion: undefined,
-            usersOptions: store.getState().users,
-            addedUsers: [],
+            usersOptions: (store.getState().users as Array<any>).filter(user => !this.props.users.includes(user)),
+            addedUsers: this.props.users,
             isPrivate: undefined
         };
     }
@@ -26,6 +27,7 @@ class NewGroup extends Component<any, any> {
     };
 
     getAddedUsers = () => {
+        // return this.state.addedUsers.map((user) => <p key={user._id}><i>{user.name}</i></p>);
         return this.state.addedUsers.map((user) => <p key={user._id}><i>{user.name}</i></p>);
     };
 
@@ -69,7 +71,6 @@ class NewGroup extends Component<any, any> {
     };
 
     onSelectUser = (e) => {
-        console.log(e.target.value);
         if (!e.target.value) {
             return;
         }
@@ -84,44 +85,65 @@ class NewGroup extends Component<any, any> {
     };
 
     onSave = () => {
-        const newGroup = {
-            name: this.state.name,
-            parent: this.state.insertion,
-            isPrivate: this.state.isPrivate,
-            users: this.state.addedUsers.map(user => user._id)
-        };
-        store.dispatch(actions.addNewGroup(newGroup));
+        if (this.state.mode === 'new') {
+            const newGroup = {
+                name: this.state.name,
+                parent: this.state.insertion,
+                isPrivate: this.state.isPrivate,
+                users: this.state.addedUsers.map(user => user._id)
+            };
+            store.dispatch(actions.addNewGroup(newGroup));
+        } else {
+            console.log(this.state.addedUsers);
+            const updatedGroup = {
+                name: this.state.name,
+                users: this.state.addedUsers.map(user => user._id)
+            };
+            store.dispatch(actions.updateGroup(updatedGroup));
+        }
     };
 
     onCancel = () => {
-        store.dispatch({type: actions.SET_MODE, payload: {mode: undefined}})
+        store.dispatch({type: actions.SET_MODE, payload: {mode: undefined}});
     };
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props !== nextProps) {
+            this.setState({
+                mode: nextProps.mode,
+                name: nextProps.name,
+                addedUsers: nextProps.users,
+            });
+        }
+    }
 
     render() {
         return (
             <div className="new-group">
                 <form className="new-group-form">
-                    <h3>Create New Group</h3>
+                    <h3>{this.state.mode === "new" ? "Create New Group" : "Edit Group"}</h3>
                     <p className="form-control">
                         <label htmlFor="name">Enter name:</label><br/>
-                        <input type="text" name="name" onChange={this.onNameChange}/>
+                        <input type="text" name="name" onChange={this.onNameChange} value={this.state.name}/>
                     </p>
-                    <p className="form-control">
-                        <label htmlFor="type">Choose type:</label><br/>
-                        <select name="type" onChange={this.onSelectType}>
-                            <option value=""/>
-                            <option value="public">Public</option>
-                            <option value="private">Private</option>
-                        </select>
-                    </p>
-                    <p className="form-control">
-                        <label htmlFor="level">Choose insertion level:</label><br/>
-                        <select name="level" onChange={this.onInsertionChange}>
-                            <option value=""/>
-                            <option value="root">Root</option>
-                            <option value={store.getState().conversation}>Selected Group</option>
-                        </select>
-                    </p>
+                    {this.state.mode === "new" ?
+                        <p className="form-control">
+                            <label htmlFor="type">Choose type:</label><br/>
+                            <select name="type" onChange={this.onSelectType}>
+                                <option value=""/>
+                                <option value="public">Public</option>
+                                <option value="private">Private</option>
+                            </select>
+                        </p> : null}
+                    {this.state.mode === "new" ?
+                        <p className="form-control">
+                            <label htmlFor="level">Choose insertion level:</label><br/>
+                            <select name="level" onChange={this.onInsertionChange}>
+                                <option value=""/>
+                                <option value="root">Root</option>
+                                <option value={store.getState().conversation.id}>Current selected group</option>
+                            </select>
+                        </p> : null}
                     {this.state.isPrivate && this.state.addedUsers.length >= 2 ? null :
                         <div>
                             <p className="form-control">

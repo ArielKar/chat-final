@@ -9,6 +9,7 @@ usersRouter.post('/login', controllers.UsersController.loginUser);
 usersRouter.get('/', authCheck, controllers.UsersController.getAllUsers);
 // get user by id
 usersRouter.get('/:userId', authCheck, controllers.UsersController.getUserById);
+usersRouter.get('/group/:groupId', authCheck, controllers.UsersController.getUsersByGroup);
 //post new user
 usersRouter.post('/', controllers.UsersController.addUser);
 // update user by id

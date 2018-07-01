@@ -43,6 +43,7 @@ var customError_1 = require("../helpers/customError");
 var UserService = /** @class */ (function () {
     function UserService() {
         this.usersDataHandler = new dataHandler_1.default('users');
+        this.groupsToUsersDataHandler = new dataHandler_1.default('groupsToUsers');
     }
     UserService.prototype.getAll = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -101,26 +102,56 @@ var UserService = /** @class */ (function () {
             });
         });
     };
-    UserService.prototype.updateUser = function (userId, newProps) {
+    UserService.prototype.getUsersByGroup = function (groupId) {
         return __awaiter(this, void 0, void 0, function () {
-            var users, userToUpdate, prop, result;
+            var groupsToUsers;
             return __generator(this, function (_a) {
                 switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.groupsToUsersDataHandler.readFile()];
+                    case 1:
+                        groupsToUsers = _a.sent();
+                        return [2 /*return*/, groupsToUsers[groupId]];
+                }
+            });
+        });
+    };
+    UserService.prototype.updateUser = function (userId, newProps) {
+        return __awaiter(this, void 0, void 0, function () {
+            var users, userToUpdate, _a, _b, _i, prop, _c, _d, result;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0: return [4 /*yield*/, this.usersDataHandler.readFile()];
                     case 1:
-                        users = _a.sent();
+                        users = _e.sent();
                         userToUpdate = users[userId];
                         if (!userToUpdate) {
                             throw new Error('Invalid request: user does not exist');
                         }
-                        for (prop in newProps) {
-                            if (userToUpdate.hasOwnProperty(prop)) {
-                                userToUpdate[prop] = newProps[prop];
-                            }
-                        }
-                        return [4 /*yield*/, this.usersDataHandler.writeFile(users)];
+                        _a = [];
+                        for (_b in newProps)
+                            _a.push(_b);
+                        _i = 0;
+                        _e.label = 2;
                     case 2:
-                        result = _a.sent();
+                        if (!(_i < _a.length)) return [3 /*break*/, 6];
+                        prop = _a[_i];
+                        if (!(userToUpdate.hasOwnProperty(prop) && !!newProps[prop])) return [3 /*break*/, 5];
+                        if (!(prop === "password")) return [3 /*break*/, 4];
+                        _c = userToUpdate;
+                        _d = prop;
+                        return [4 /*yield*/, bcrypt.hash(newProps[prop], 10)];
+                    case 3:
+                        _c[_d] = _e.sent();
+                        return [3 /*break*/, 5];
+                    case 4:
+                        userToUpdate[prop] = newProps[prop];
+                        _e.label = 5;
+                    case 5:
+                        _i++;
+                        return [3 /*break*/, 2];
+                    case 6: return [4 /*yield*/, this.usersDataHandler.writeFile(users)];
+                    case 7:
+                        result = _e.sent();
                         if (result) {
                             return [2 /*return*/, userToUpdate];
                         }
