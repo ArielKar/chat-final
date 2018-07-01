@@ -4,14 +4,17 @@ import './UserManager.css';
 import store from "../../appStore/store";
 import FormControl from "../FormControl/FormControl";
 import Button from "../Button/Button";
-import {SET_MODE, updateUser} from "../../appStore/actions";
+import {addUser, deleteUser, SET_MODE, updateUser} from "../../appStore/actions";
 
 class UsersManager extends Component<any, any> {
 
     constructor(props) {
         super(props);
         this.state = {
-            addForm: false
+            addForm: false,
+            newUserName: undefined,
+            newUserAge: undefined,
+            newUserPassword: undefined
         };
     }
 
@@ -28,6 +31,8 @@ class UsersManager extends Component<any, any> {
             store.dispatch(updateUser(changedUser));
         }
         if (e.target.name === "delete") {
+            const id = e._targetInst.return.return.key;
+            store.dispatch(deleteUser(id));
 
         }
 
@@ -41,10 +46,16 @@ class UsersManager extends Component<any, any> {
 
     onInputChange = (e) => {
         console.log(e.target.name);
+        this.setState({
+            [e.target.name]: e.target.value
+        });
     };
 
     onSave = () => {
-
+        console.log(this.state);
+        const {newUserName: name, newUserAge: age, newUserPassword: password} = this.state;
+        const newUser = {name, age, password};
+        store.dispatch(addUser(newUser));
     };
 
     onCancel = () => {
@@ -82,11 +93,11 @@ class UsersManager extends Component<any, any> {
                     <button className="login-btn" onClick={this.onAddClicked}>Add</button>
                     {this.state.addForm ?
                         <form>
-                            <FormControl name={"name"} label={"Name"} placeholder={"Enter name here..."}
+                            <FormControl name={"newUserName"} label={"Name"} placeholder={"Enter name here..."}
                                          onChange={this.onInputChange}/>
-                            <FormControl name={"age"} label={"Age"} placeholder={"Enter age here..."}
+                            <FormControl name={"newUserAge"} label={"Age"} placeholder={"Enter age here..."}
                                          onChange={this.onInputChange}/>
-                            <FormControl name={"password"} label={"Password"} placeholder={"Enter password here..."}
+                            <FormControl name={"newUserPassword"} label={"Password"} placeholder={"Enter password here..."}
                                          onChange={this.onInputChange}/>
                             <Button class={"login-btn"} click={this.onSave} type={"button"} text={"Save"}/>
                             <Button class={"login-btn"} click={this.onCancel} type={"button"} text={"Cancel"}/>

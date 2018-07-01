@@ -35,7 +35,7 @@ class Store {
         if (typeof action === "object") {
             this.state = this.reducer(this.state, action);
             this.emit();
-            console.log(this.getState());
+            // console.log(this.getState());
         }
         if (typeof action === "function") {
             this.dispatch(action(this.dispatch));
@@ -43,7 +43,7 @@ class Store {
     };
 
     reducer(state: IState, action: IActionObj): IState {
-        console.log('Updating state >>>>', action.type);
+        // console.log('Updating state >>>>', action.type);
         switch (action.type) {
             case actionTypes.SET_ERROR:
                 return {

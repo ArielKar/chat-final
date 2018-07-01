@@ -27,7 +27,6 @@ class NewGroup extends Component<any, any> {
     };
 
     getAddedUsers = () => {
-        // return this.state.addedUsers.map((user) => <p key={user._id}><i>{user.name}</i></p>);
         return this.state.addedUsers.map((user) => <p key={user._id}><i>{user.name}</i></p>);
     };
 
@@ -141,7 +140,8 @@ class NewGroup extends Component<any, any> {
                             <select name="level" onChange={this.onInsertionChange}>
                                 <option value=""/>
                                 <option value="root">Root</option>
-                                <option value={store.getState().conversation.id}>Current selected group</option>
+                                { store.getState().conversation ?
+                                <option value={store.getState().conversation.id}>Current selected group</option> : null }
                             </select>
                         </p> : null}
                     {this.state.isPrivate && this.state.addedUsers.length >= 2 ? null :

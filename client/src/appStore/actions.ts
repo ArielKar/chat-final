@@ -1,5 +1,4 @@
 import * as serverAPI from '../serverApi/serverAPI';
-import store from './store';
 
 export const LOGIN = "LOGIN";
 export const LOGOUT = "LOGOUT";
@@ -25,7 +24,6 @@ export function setConversation(selectedElementID: Number) {
 export function setConversationUsers(selectedElement) {
     return async function(dispatch: Function) {
         const users = await serverAPI.getUserOfGroup(selectedElement.id);
-        console.log(users);
         dispatch({type: SET_USERS_GROUP, payload: {users}});
     }
 }
@@ -66,11 +64,28 @@ export function deleteGroup() {
     }
 }
 
+export function addUser(newUser) {
+    return async function(dispatch: Function) {
+        const createdUser = await serverAPI.addUser(newUser);
+        const users = await serverAPI.getPrivateGroups();
+        dispatch({type: SET_USERS, payload: {users}})
+
+    }
+}
+
 export function updateUser(changedUser) {
     return async function(dispatch: Function) {
         const updatedUser = await serverAPI.updateUser(changedUser);
         const users = await serverAPI.getPrivateGroups();
         dispatch({type: SET_USERS, payload: {users}})
 
+    }
+}
+
+export function deleteUser(userId) {
+    return async function(dispatch: Function) {
+        const deleted = await serverAPI.deleteUser(userId);
+        const users = await serverAPI.getPrivateGroups();
+        dispatch({type: SET_USERS, payload: {users}})
     }
 }

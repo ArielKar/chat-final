@@ -165,6 +165,24 @@ export async function deleteGroup() {
     }
 }
 
+export async function addUser(newUser) {
+    try {
+        const {token} = store.getState();
+        const addUserResponse = await fetch(`${BASE_URL}/users`, {
+            method: "POST",
+            body: JSON.stringify(newUser),
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+        const createdUser = await addUserResponse.json();
+        console.log(createdUser);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
 export async function updateUser(changedUser) {
     try {
         const {token} = store.getState();
@@ -179,6 +197,20 @@ export async function updateUser(changedUser) {
         const updatedUser = await  updateResponse.json();
         return updatedUser.data;
         
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+export async function deleteUser(userId) {
+    try {
+        const {token} = store.getState();
+        const deleteResponse = await fetch(`${BASE_URL}/users/${userId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
     } catch (err) {
         console.log(err.message);
     }
