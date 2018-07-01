@@ -1,7 +1,9 @@
 import store from "src/appStore/store";
 import * as actionTypes from '../appStore/actions';
+import io from 'socket.io-client';
 
 const BASE_URL = 'http://localhost:4000';
+let socket;
 
 export async function login(name: string, password: string) {
     try {
@@ -14,6 +16,8 @@ export async function login(name: string, password: string) {
             body: body
         });
         if (response.status === 200) {
+            socket = io(`${BASE_URL}`);
+            socket.on("receiveMessage", handleReceivedMessages);
             const data = await response.json();
             store.dispatch({type: actionTypes.SET_USER, payload: {user: data.user}});
             store.dispatch({type: actionTypes.LOGIN});
@@ -91,14 +95,6 @@ export async function getPrivateGroups() {
         return new Promise((resolve, reject) => {
             resolve(undefined);
         });
-    }
-}
-
-export async function postMessage(msgArray) {
-    try {
-
-    } catch (err) {
-        console.log(err.message);
     }
 }
 
@@ -211,6 +207,25 @@ export async function deleteUser(userId) {
                 Authorization: `Bearer ${token}`
             }
         });
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+export async function postMessage(msgArray) {
+    try {
+        socket.emit("postMessage", msgArray);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+async function handleReceivedMessages(newMessage) {
+    try {
+        const {conversation} = store.getState();
+        if (conversation && conversation.id === newMessage.recipient) {
+            store.dispatch({type: actionTypes.ADD_MESSAGE, payload: {newMessage}});
+        }
     } catch (err) {
         console.log(err.message);
     }

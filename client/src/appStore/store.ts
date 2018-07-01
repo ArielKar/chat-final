@@ -43,7 +43,7 @@ class Store {
     };
 
     reducer(state: IState, action: IActionObj): IState {
-        // console.log('Updating state >>>>', action.type);
+        console.log('Updating state >>>>', action.type);
         switch (action.type) {
             case actionTypes.SET_ERROR:
                 return {
@@ -86,9 +86,11 @@ class Store {
                     messages: action.payload.messages
                 };
             case actionTypes.ADD_MESSAGE:
+                const messages = state.messages || [];
+                const updatedMessages = messages.concat(action.payload.newMessage);
                 return {
                     ...state,
-                    messages: state.messages.concat(action.payload.msgArray)
+                    messages: updatedMessages
                 };
             case actionTypes.LOGOUT: {
                 return {

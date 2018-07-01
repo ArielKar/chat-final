@@ -13,8 +13,8 @@ const Messages = (props: IMessagesProps) => {
     if (!props.messages || props.messages === []) {
         result = <div className="inform">Send a message to start a conversation</div>;
     } else {
-        result = props.messages.map((message: any) => {
-            return <Message type={store.getState().user.name === message.sender ? "sent" : "received"} sender={message.sender} messageBody={message.body} time={message.time} key={message._id}/>
+        result = props.messages.map((message: any, idx) => {
+            return <Message key={idx+1} type={store.getState().user.name === message.sender ? "sent" : "received"} sender={message.sender} messageBody={message.body} time={message.time}/>
         });
     }
 

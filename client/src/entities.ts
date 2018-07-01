@@ -12,40 +12,40 @@ export interface IStateStore {
 }
 
 export interface IState {
-    isLoggedin: boolean,
-    token: string | undefined,
-    user: {_id: number, name: string, age: number} | undefined,
-    tree: object | undefined,
-    conversation: any | undefined,
-    messages: object[] | undefined,
-    error: String | undefined,
-    mode: String | undefined,
-    users: Object[] | undefined
+    isLoggedin: boolean;
+    token: string | undefined;
+    user: {_id: number, name: string, age: number} | undefined;
+    tree: object | undefined;
+    conversation: any | undefined;
+    messages: object[] | undefined;
+    error: String | undefined;
+    mode: String | undefined;
+    users: Object[] | undefined;
 }
 
 export interface IActionObj {
-    type: string,
-    payload?: any
+    type: string;
+    payload?: any;
 }
 
 export interface IActionFunc {
-    (dispatch: Function) : IActionObj
+    (dispatch: Function) : IActionObj;
 }
 
 export interface IAppState {
-    user: any | undefined,
-    tree: Object | undefined,
-    conversation: any | undefined,
-    messages: Object[] | undefined,
-    mode: string | undefined
+    user: any | undefined;
+    tree: Object | undefined;
+    conversation: any | undefined;
+    messages: Object[] | undefined;
+    mode: string | undefined;
 }
 
 export interface IChatProps {
-    user: string | undefined,
-    tree: Object | undefined,
-    conversation: {id: string, name: string} | undefined,
-    messages: Object[] | undefined,
-    mode: string | undefined
+    user: string | undefined;
+    tree: Object | undefined;
+    conversation: {id: string, name: string} | undefined;
+    messages: Object[] | undefined;
+    mode: string | undefined;
 }
 
 export interface ITreeProps {
@@ -53,13 +53,13 @@ export interface ITreeProps {
 }
 
 export interface IMessagingState {
-    messages: Object[] | undefined
+    messages: Object[] | undefined;
 }
 
 export interface IMessagingProps {
-    user: string | undefined,
-    conversation: {id: string, name: string} | undefined,
-    messages: Object[] | undefined
+    user: string | undefined;
+    conversation: {id: string, name: string} | undefined;
+    messages: Object[] | undefined;
 }
 
 export interface INewMsgProps {
@@ -71,31 +71,31 @@ export interface INewMsgState {
 }
 
 export interface IButtonProps {
-    text: string,
-    type: string
-    class: string,
-    isDisabled?: boolean
-    click: (event: React.MouseEvent<HTMLButtonElement> | undefined) => void
+    text: string;
+    type: string;
+    class: string;
+    isDisabled?: boolean;
+    click: (event: React.MouseEvent<HTMLButtonElement> | undefined) => void;
 }
 
 export interface IFormControlProps {
-    name: string,
-    label: string,
-    placeholder: string,
-    onChange?: (event: ChangeEvent<HTMLInputElement>) => void
+    name: string;
+    label: string;
+    placeholder: string;
+    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface IHeaderProps {
-    user: string | undefined
+    user: string | undefined;
 }
 
 export interface IMessagesProps {
-    messages: Object[] | undefined
+    messages: Object[] | undefined;
 }
 
 export interface IMessage {
-    type: string
-    sender: string,
-    messageBody: string,
-    time: string
+    type: string;
+    sender: string;
+    messageBody: string;
+    time: string;
 }

@@ -37,9 +37,8 @@ export function getPrivateGroups() {
 
 export function addNewMessage(msgArray) {
     return async function(dispatch: Function) {
-        dispatch({type: ADD_MESSAGE, payload: {msgArray}});
-        const savedMessage = await serverAPI.postMessage(msgArray);
-        console.log(savedMessage);
+        // dispatch({type: ADD_MESSAGE, payload: {msgArray}});
+        await serverAPI.postMessage(msgArray);
     }
 }
 

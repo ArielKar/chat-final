@@ -4,13 +4,13 @@
   "devDependencies": {
     "@types/bcrypt": "^2.0.0",
     "@types/jsonwebtoken": "^7.2.7",
+    "@types/cors": "^2.8.4",
     "concurrently": "^3.5.1"
   },
   "scripts": {
     "start": "concurrently \" npm run --prefix ./client start\" \"npm run --prefix ./server start\" "
   },
   "dependencies": {
-    "@types/cors": "^2.8.4",
     "bcrypt": "^2.0.1",
     "config": "^1.30.0",
     "cors": "^2.8.4",
