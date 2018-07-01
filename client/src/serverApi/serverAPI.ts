@@ -53,7 +53,7 @@ export async function getMessages() {
     try {
         const {token} = store.getState();
         const {conversation} = store.getState();
-        const response = await fetch(`${BASE_URL}/messages/${conversation}`, {
+        const response = await fetch(`${BASE_URL}/messages/${conversation.id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

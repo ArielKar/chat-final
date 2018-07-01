@@ -1,18 +1,18 @@
 {
-  "1529407994196": [
+  "7454451b-1406-48a0-bc11-8a755448988f": [
     {
-      "_id": "1000",
       "sender": "Ariel",
-      "recipient": "1529407994196",
-      "body": "This is a message from ariel",
-      "time": "01:43 AM"
+      "recipient": "7454451b-1406-48a0-bc11-8a755448988f",
+      "body": "Hello Friends!",
+      "time": "12:28:40 AM",
+      "_id": "97851a47-7203-44c4-9716-ce7f00f5652b"
     },
     {
-      "_id": "1001",
-      "sender": "Shai",
-      "recipient": "1529407994196",
-      "body": "This is a response from shai",
-      "time": "01:57 AM"
+      "sender": "Ori",
+      "recipient": "7454451b-1406-48a0-bc11-8a755448988f",
+      "body": "Hello",
+      "time": "12:31:46 AM",
+      "_id": "ac91a5f3-b448-4836-9f7d-0dc0687fe411"
     }
   ]
 }

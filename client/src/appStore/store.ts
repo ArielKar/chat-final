@@ -41,9 +41,8 @@ class Store {
             this.dispatch(action(this.dispatch));
         }
     };
-
+    // TODO: refactor and export by types
     reducer(state: IState, action: IActionObj): IState {
-        console.log('Updating state >>>>', action.type);
         switch (action.type) {
             case actionTypes.SET_ERROR:
                 return {
