@@ -4,19 +4,13 @@ import './Messaging.css';
 
 import Messages from "../../components/Messages/Messages";
 import NewMessage from "./NewMessage/NewMessage";
-import {IMessagingProps, IMessagingState} from "../../entities";
-import * as actions from '../../appStore/actions';
-import store from '../../appStore/store';
 
-class Messaging extends React.Component<IMessagingProps, IMessagingState> {
-    constructor(props: IMessagingProps) {
-        super(props);
-    }
+class Messaging extends React.Component<any, any> {
 
     addNewMessageHandler = (value: string) => {
         if (!this.props.conversation) return;
         const newMsg = this.createNewMsgObj(value);
-        store.dispatch(actions.addNewMessage(newMsg));
+        this.props.addNewMessage(newMsg);
     };
 
     createNewMsgObj(messageBody: string) {
@@ -35,7 +29,7 @@ class Messaging extends React.Component<IMessagingProps, IMessagingState> {
     render() {
         return (
             <div className="messaging">
-                <Messages messages={this.props.messages}/>
+                <Messages messages={this.props.messages} user={this.props.user}/>
                 <NewMessage addNewMessage={this.addNewMessageHandler} />
             </div>
         );

@@ -4,11 +4,8 @@ import './Tree.css';
 
 import ChatTree from '../../../plugins/tree-build/chat-tree';
 import {events} from '../../../util/events';
-import {ITreeProps} from "../../../entities";
-import store from "../../../appStore/store";
-import * as actionTypes from '../../../appStore/actions';
 
-class Tree extends React.Component<ITreeProps, {}> {
+class Tree extends React.Component<any, {}> {
     listElement: any;
     tree: any;
     data: Object | undefined;
@@ -34,8 +31,7 @@ class Tree extends React.Component<ITreeProps, {}> {
     }
 
     onTreeElementSelected = (selectedElementID: number) => {
-        store.dispatch(actionTypes.setConversation(selectedElementID));
-        store.dispatch(actionTypes.setConversationUsers(selectedElementID));
+        this.props.setConversation(selectedElementID);
     };
 
     componentWillUnmount() {

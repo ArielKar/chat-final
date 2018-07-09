@@ -1,10 +1,9 @@
 import * as React from 'react';
+import {ChangeEvent} from 'react';
 import './Login.css';
 
 import FormControl from "../../components/FormControl/FormControl";
 import Button from "../../components/Button/Button";
-import {login} from '../../serverApi/serverAPI';
-import {ChangeEvent} from "react";
 
 interface ILoginState {
     usernameInput?: string,
@@ -12,9 +11,13 @@ interface ILoginState {
     isValid: boolean
 }
 
-class Login extends React.Component<any, ILoginState> {
+interface ILoginProps {
+    login: (name: string, password:string) => void
+}
+
+class Login extends React.Component<ILoginProps, ILoginState> {
     errorMsg: string;
-    constructor(props: {}) {
+    constructor(props) {
         super(props);
         this.state = {
             usernameInput: '',
@@ -38,7 +41,7 @@ class Login extends React.Component<any, ILoginState> {
             });
             return;
         }
-        login(this.state.usernameInput, this.state.passwordInput);
+        this.props.login(this.state.usernameInput, this.state.passwordInput);
     };
 
     render() {

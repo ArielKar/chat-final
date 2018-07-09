@@ -1,5 +1,7 @@
 import * as React from "react";
 import {ChangeEvent} from "react";
+import {Action, Dispatch, Unsubscribe} from "redux";
+import {IUser} from "../../server/src/models/interfaces/interfaces";
 
 export interface IStateStore {
     state: Object;
@@ -11,8 +13,13 @@ export interface IStateStore {
     onStateChanged(): void;
 }
 
+export interface IStore {
+    dispatch: Dispatch<Action | any>;
+    getState(): IState;
+    subscribe(listener: () => void): Unsubscribe;
+}
+
 export interface IState {
-    isLoggedin: boolean;
     token: string | undefined;
     user: {_id: number, name: string, age: number} | undefined;
     tree: object | undefined;
@@ -86,7 +93,7 @@ export interface IFormControlProps {
 }
 
 export interface IHeaderProps {
-    user: string | undefined;
+    user: IUser;
 }
 
 export interface IMessagesProps {

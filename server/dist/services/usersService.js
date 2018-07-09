@@ -38,6 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 var config = require("config");
+var uuidv4 = require("uuid/v4");
 var dataHandler_1 = require("../db/dataHandler");
 var customError_1 = require("../helpers/customError");
 var UserService = /** @class */ (function () {
@@ -85,7 +86,7 @@ var UserService = /** @class */ (function () {
                         return [4 /*yield*/, bcrypt.hash(password, 10)];
                     case 1:
                         hashedPassword = _a.sent();
-                        newUser = Object.assign({ _id: Date.now().toString() }, { name: name, age: age, password: hashedPassword });
+                        newUser = Object.assign({ _id: uuidv4() }, { name: name, age: age, password: hashedPassword });
                         return [4 /*yield*/, this.usersDataHandler.readFile()];
                     case 2:
                         users = _a.sent();

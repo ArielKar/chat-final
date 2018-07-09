@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {BrowserRouter, Route, Redirect} from 'react-router-dom';
+import {BrowserRouter, Redirect, Route} from 'react-router-dom';
 
 import './App.css';
 
@@ -7,46 +7,23 @@ import Login from "../LoginModal/Login";
 import Header from "../../components/Header/Header";
 import Chat from "../Chat/Chat";
 import Footer from "../../components/Footer/Footer";
+import {connect} from "react-redux";
+import * as thunks from "../../store/thunks";
+import * as actions from '../../store/actions';
 
-import Store from "../../appStore/store";
-import {IAppState} from "../../entities";
-
-
-class App extends React.Component<{}, IAppState> {
-
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            user: undefined,
-            tree: undefined,
-            conversation: undefined,
-            messages: undefined,
-            mode: undefined
-        };
-
-        Store.subscribe(({user: nextUser, tree: nextTree, conversation: nextConversation, messages: nextMessages, mode:nextMode}: IAppState) => {
-
-            this.setState({
-                user: nextUser,
-                tree: nextTree,
-                conversation: nextConversation,
-                messages: nextMessages,
-                mode: nextMode
-            });
-        });
-    }
+class App extends React.Component<any, {}> {
 
     public render() {
         const login = () => {
-            if (!!this.state.user) {
+            if (!!this.props.user) {
                 return <Redirect to="/chat"/>;
             }
             return (
                 <>
-                    <Login/>
+                    <Login login={this.props.login}/>
                     <div className="App">
-                        <Header user={this.state.user}/>
-                        <Chat user={this.state.user} tree={this.state.tree} conversation={this.state.conversation} messages={this.state.messages} mode={this.state.mode}/>
+                        <Header/>
+                        <Chat/>
                         <Footer/>
                     </div>
                 </>
@@ -54,20 +31,23 @@ class App extends React.Component<{}, IAppState> {
         };
 
         const chat = () => {
-            if (!this.state.user) {
+            if (!this.props.user) {
                 return <Redirect to='/login'/>
             }
             return (
                 <div className="App">
-                    <Header user={this.state.user.name}/>
-                    <Chat user={this.state.user.name} tree={this.state.tree} conversation={this.state.conversation} messages={this.state.messages} mode={this.state.mode}/>
+                    <Header user={this.props.user}
+                            logout={this.props.logout}
+                            setMode={this.props.setMode}
+                            deleteGroup={this.props.deleteGroup}/>
+                    <Chat/>
                     <Footer/>
                 </div>
             );
         };
 
         const renderDecider = () => (
-            !this.state.user ?
+            !this.props.user ?
                 (<Redirect to="/login"/>) :
                 (<Redirect to="/chat"/>)
         );
@@ -84,4 +64,19 @@ class App extends React.Component<{}, IAppState> {
     }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+    return {
+        user: state.user
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        login: (name, password) => dispatch(thunks.login(name, password)),
+        logout: () => dispatch(actions.logout()),
+        setMode: (mode) => dispatch(actions.setMode(mode)),
+        deleteGroup: () => dispatch(thunks.deleteGroup())
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

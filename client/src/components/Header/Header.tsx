@@ -1,25 +1,18 @@
 import * as React from 'react';
+import {Component} from 'react';
 
 import './Header.css';
 
-import {IHeaderProps} from "../../entities";
-import store from "../../appStore/store";
-import {LOGOUT, SET_MODE, deleteGroup} from "../../appStore/actions";
-import {Component} from "react";
-
-class Header extends Component<IHeaderProps, any> {
+class Header extends Component<any, any> {
     menuElement;
+
     constructor(props) {
         super(props);
+        this.menuElement = React.createRef();
         this.state = {
             isMenuShown: false
         };
-        this.menuElement = React.createRef();
     }
-
-    onLogout = () => {
-        store.dispatch({type: LOGOUT})
-    };
 
     openMenu = () => {
         this.setState({
@@ -27,20 +20,20 @@ class Header extends Component<IHeaderProps, any> {
         });
     };
 
-    closeMenu = (e) => {
+    closeMenu = () => {
         this.setState({
             isMenuShown: false
         });
     };
 
     onMenuItemClicked = (e) => {
-        store.dispatch({type: SET_MODE, payload: {mode: e.target.id}});
         this.menuElement.current.blur();
+        this.props.setMode(e.target.id);
     };
 
     deleteSelectedItem = () => {
         this.menuElement.current.blur();
-        store.dispatch(deleteGroup());
+        this.props.deleteGroup();
     };
 
     render() {
@@ -49,10 +42,12 @@ class Header extends Component<IHeaderProps, any> {
                 <div className="logo">
                     <img src="./logo.png" alt="chat-logo"/>
                 </div>
+                {this.props.user ?
                 <div className="logged-user">
-                    <p>Welcome <span className="logged-user-name">{this.props.user}</span></p>
-                </div>
-                <div className="dots-wrapper" ref={this.menuElement} onFocus={this.openMenu} onBlur={this.closeMenu} tabIndex={0}>
+                    <p>Welcome <span className="logged-user-name">{this.props.user.name}</span></p>
+                </div> : null}
+                <div className="dots-wrapper" ref={this.menuElement} onFocus={this.openMenu} onBlur={this.closeMenu}
+                     tabIndex={0}>
                     <div className="dot"/>
                     <div className="dot"/>
                     <div className="dot"/>
@@ -63,13 +58,13 @@ class Header extends Component<IHeaderProps, any> {
                                 <li id="newGroup" onClick={this.onMenuItemClicked}>New group</li>
                                 <li id="edit" onClick={this.onMenuItemClicked}>Edit</li>
                                 <li id="delete" onClick={this.deleteSelectedItem}>Delete</li>
-                                <li onClick={this.onLogout}>Logout</li>
+                                <li onClick={this.props.logout}>Logout</li>
                             </ul>
                         </div> : null}
                 </div>
             </div>
         );
     }
-};
+}
 
 export default Header;

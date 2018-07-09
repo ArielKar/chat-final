@@ -1,11 +1,8 @@
 import * as React from 'react';
-import {Component} from "react";
+import {Component} from 'react';
 
 import './NewGroup.css';
 import Button from "../Button/Button";
-import * as actions from '../../appStore/actions';
-import store from '../../appStore/store';
-
 
 class NewGroup extends Component<any, any> {
 
@@ -15,9 +12,9 @@ class NewGroup extends Component<any, any> {
         this.state = {
             mode: this.props.mode,
             name: this.props.name,
-            insertion: undefined,
-            usersOptions: (store.getState().users as Array<any>).filter(user => !this.props.users.includes(user)),
-            addedUsers: this.props.users,
+            insertionLevel: undefined,
+            usersOptions: (this.props.users as Array<any>).filter(user => !this.props.usersOfGroup.includes(user)),
+            addedUsers: this.props.usersOfGroup,
             isPrivate: undefined
         };
     }
@@ -60,11 +57,11 @@ class NewGroup extends Component<any, any> {
     onInsertionChange = (e) => {
         if (!e.target.value || e.target.value === 'root') {
             this.setState({
-                insertion: null
+                insertionLevel: null
             });
         } else {
             this.setState({
-                insertion: e.target.value
+                insertionLevel: e.target.value
             });
         }
     };
@@ -87,23 +84,23 @@ class NewGroup extends Component<any, any> {
         if (this.state.mode === 'new') {
             const newGroup = {
                 name: this.state.name,
-                parent: this.state.insertion,
+                parent: this.state.insertionLevel,
                 isPrivate: this.state.isPrivate,
                 users: this.state.addedUsers.map(user => user._id)
             };
-            store.dispatch(actions.addNewGroup(newGroup));
+            this.props.addNewGroup(newGroup);
         } else {
             console.log(this.state.addedUsers);
             const updatedGroup = {
                 name: this.state.name,
                 users: this.state.addedUsers.map(user => user._id)
             };
-            store.dispatch(actions.updateGroup(updatedGroup));
+            this.props.updateGroup(updatedGroup);
         }
     };
 
     onCancel = () => {
-        store.dispatch({type: actions.SET_MODE, payload: {mode: undefined}});
+        this.props.onCancel();
     };
 
     componentWillReceiveProps(nextProps) {
@@ -111,7 +108,7 @@ class NewGroup extends Component<any, any> {
             this.setState({
                 mode: nextProps.mode,
                 name: nextProps.name,
-                addedUsers: nextProps.users,
+                addedUsers: nextProps.usersOfGroup,
             });
         }
     }
@@ -140,8 +137,8 @@ class NewGroup extends Component<any, any> {
                             <select name="level" onChange={this.onInsertionChange}>
                                 <option value=""/>
                                 <option value="root">Root</option>
-                                { store.getState().conversation ?
-                                <option value={store.getState().conversation.id}>Current selected group</option> : null }
+                                { this.props.conversation ?
+                                <option value={this.props.conversation.id}>Current selected group</option> : null }
                             </select>
                         </p> : null}
                     {this.state.isPrivate && this.state.addedUsers.length >= 2 ? null :

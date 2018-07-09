@@ -1,5 +1,5 @@
-import store from "src/appStore/store";
-import * as actionTypes from '../appStore/actions';
+import {store} from "../store/store";
+import * as actions from '../store/actions';
 import io from 'socket.io-client';
 
 const BASE_URL = 'http://localhost:4000';
@@ -18,23 +18,17 @@ export async function login(name: string, password: string) {
         if (response.status === 200) {
             socket = io(`${BASE_URL}`);
             socket.on("receiveMessage", handleReceivedMessages);
-            const data = await response.json();
-            store.dispatch({type: actionTypes.SET_USER, payload: {user: data.user}});
-            store.dispatch({type: actionTypes.LOGIN});
-            store.dispatch({type: actionTypes.SET_TOKEN, payload: {token: data.token}});
-            store.dispatch(actionTypes.getPrivateGroups());
-            getTree();
+            return await response.json();
         } else {
-            store.dispatch({type: actionTypes.SET_ERROR, payload: {error: 'Invalid credentials'}});
+            store.dispatch(actions.setError('Invalid Credentials'));
         }
     } catch (err) {
         console.log(err);
     }
 }
 
-export async function getTree() {
+export async function getTree(token) {
     try {
-        const {token} = store.getState();
         const response = await fetch(`${BASE_URL}/groups/tree`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -42,17 +36,15 @@ export async function getTree() {
         });
         if (response.status === 200) {
             const parsedResponse = await response.json();
-            store.dispatch({type: actionTypes.SET_TREE, payload: {tree: parsedResponse.data}});
+            return parsedResponse.data;
         }
     } catch (err) {
-        store.dispatch({type: actionTypes.SET_ERROR, payload: {error: 'Oh oh, something went wrong'}});
+        store.dispatch(actions.setError('Oh oh, something went wrong'));
     }
 }
 
-export async function getMessages() {
+export async function getMessages(token, conversation) {
     try {
-        const {token} = store.getState();
-        const {conversation} = store.getState();
         const response = await fetch(`${BASE_URL}/messages/${conversation.id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -76,9 +68,8 @@ export async function getMessages() {
     }
 }
 
-export async function getPrivateGroups() {
+export async function getPrivateGroups(token) {
     try {
-        const {token} = store.getState();
         const usersResponse = await fetch(`${BASE_URL}/users`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -98,9 +89,8 @@ export async function getPrivateGroups() {
     }
 }
 
-export async function postGroup(newGroup) {
+export async function postGroup(newGroup, token) {
     try {
-        const {token} = store.getState();
         const postGroupResponse = await fetch(`${BASE_URL}/groups`, {
             method: "POST",
             body: JSON.stringify(newGroup),
@@ -116,9 +106,8 @@ export async function postGroup(newGroup) {
     }
 }
 
-export async function updateGroup(updatedGroup) {
+export async function updateGroup(updatedGroup, token, conversation) {
     try {
-        const {token, conversation} = store.getState();
         const updateResponse = await fetch(`${BASE_URL}/groups/${conversation.id}`, {
             method: "PUT",
             body: JSON.stringify(updatedGroup),
@@ -132,9 +121,8 @@ export async function updateGroup(updatedGroup) {
     }
 }
 
-export async function getUserOfGroup(groupId) {
+export async function getUserOfGroup(groupId, token) {
     try {
-        const {token} = store.getState();
         const usersResponse = await fetch(`${BASE_URL}/users/group/${groupId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -147,9 +135,8 @@ export async function getUserOfGroup(groupId) {
     }
 }
 
-export async function deleteGroup() {
+export async function deleteGroup(token, conversation) {
     try {
-        const {token, conversation} = store.getState();
         const deleteResponse = await fetch(`${BASE_URL}/groups/${conversation.id}`, {
             method: "DELETE",
             headers: {
@@ -161,9 +148,8 @@ export async function deleteGroup() {
     }
 }
 
-export async function addUser(newUser) {
+export async function addUser(newUser, token) {
     try {
-        const {token} = store.getState();
         const addUserResponse = await fetch(`${BASE_URL}/users`, {
             method: "POST",
             body: JSON.stringify(newUser),
@@ -173,15 +159,13 @@ export async function addUser(newUser) {
             }
         });
         const createdUser = await addUserResponse.json();
-        console.log(createdUser);
     } catch (err) {
         console.log(err.message);
     }
 }
 
-export async function updateUser(changedUser) {
+export async function updateUser(changedUser, token) {
     try {
-        const {token} = store.getState();
         const updateResponse = await fetch(`${BASE_URL}/users/${changedUser._id}`, {
             method: "PUT",
             body: JSON.stringify(changedUser),
@@ -192,15 +176,14 @@ export async function updateUser(changedUser) {
         });
         const updatedUser = await  updateResponse.json();
         return updatedUser.data;
-        
+
     } catch (err) {
         console.log(err.message);
     }
 }
 
-export async function deleteUser(userId) {
+export async function deleteUser(userId, token) {
     try {
-        const {token} = store.getState();
         const deleteResponse = await fetch(`${BASE_URL}/users/${userId}`, {
             method: "DELETE",
             headers: {
@@ -220,11 +203,10 @@ export async function postMessage(msgArray) {
     }
 }
 
-async function handleReceivedMessages(newMessage) {
+async function handleReceivedMessages(newMessage, conversation) {
     try {
-        const {conversation} = store.getState();
         if (conversation && conversation.id === newMessage.recipient) {
-            store.dispatch({type: actionTypes.ADD_MESSAGE, payload: {newMessage}});
+            store.dispatch(actions.addMessage(newMessage));
         }
     } catch (err) {
         console.log(err.message);

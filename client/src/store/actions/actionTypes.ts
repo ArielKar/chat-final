@@ -1,0 +1,12 @@
+export const LOGIN = "LOGIN";
+export const LOGOUT = "LOGOUT";
+export const SET_TOKEN = "SET_TOKEN";
+export const SET_USER = "SET_USER";
+export const SET_ERROR = "SET_ERROR";
+export const SET_TREE = "SET_TREE";
+export const SET_CONVERSATION = "SET_CONVERSATION";
+export const SET_MESSAGES = "SET_MESSAGES";
+export const ADD_MESSAGE = "ADD_MESSAGE";
+export const SET_MODE = "SET_MODE";
+export const SET_USERS = "SET_USERS";
+export const SET_USERS_GROUP = "SET_USERS_GROUP";

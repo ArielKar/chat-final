@@ -1,10 +1,8 @@
 import * as React from 'react';
-import {Component} from "react";
+import {Component} from 'react';
 import './UserManager.css';
-import store from "../../appStore/store";
 import FormControl from "../FormControl/FormControl";
 import Button from "../Button/Button";
-import {addUser, deleteUser, SET_MODE, updateUser} from "../../appStore/actions";
 
 class UsersManager extends Component<any, any> {
 
@@ -14,28 +12,15 @@ class UsersManager extends Component<any, any> {
             addForm: false,
             newUserName: undefined,
             newUserAge: undefined,
-            newUserPassword: undefined
+            newUserPassword: undefined,
+            editedAge: undefined,
+            editedPassword: undefined
         };
     }
 
+    // new user handling
     closeManager = () => {
-        store.dispatch({type: SET_MODE, payload: {mode: undefined}});
-    };
-
-    onUlClick = (e) => {
-        if (e.target.name === "save") {
-            const id = e._targetInst.return.return.key;
-            const age = e.target.parentElement.parentElement.childNodes[1].childNodes[0].childNodes[1].value;
-            const password = e.target.parentElement.parentElement.childNodes[1].childNodes[1].childNodes[1].value;
-            const changedUser = {_id: id, age, password};
-            store.dispatch(updateUser(changedUser));
-        }
-        if (e.target.name === "delete") {
-            const id = e._targetInst.return.return.key;
-            store.dispatch(deleteUser(id));
-
-        }
-
+        this.props.closeManager();
     };
 
     onAddClicked = () => {
@@ -45,17 +30,15 @@ class UsersManager extends Component<any, any> {
     };
 
     onInputChange = (e) => {
-        console.log(e.target.name);
         this.setState({
             [e.target.name]: e.target.value
         });
     };
 
     onSave = () => {
-        console.log(this.state);
         const {newUserName: name, newUserAge: age, newUserPassword: password} = this.state;
         const newUser = {name, age, password};
-        store.dispatch(addUser(newUser));
+        this.props.addUser(newUser);
     };
 
     onCancel = () => {
@@ -64,19 +47,46 @@ class UsersManager extends Component<any, any> {
         });
     };
 
+    // edited user handling
+    onUserEditFieldChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    };
+
+    onSaveEditedHandler = (id) => {
+        const {editedAge, editedPassword} = this.state;
+        if (!editedAge && !editedPassword) {
+            //    TODO: show error
+            return;
+        }
+        const changedUser = {_id: id, age: editedAge, password: editedPassword};
+        this.props.updateUser(changedUser);
+    };
+
+    onDeleteHandler = (id: string): void => {
+        this.props.deleteUser(id);
+    };
+
     buildUsers = () => {
-        return [...store.getState().users].map((user: any) => {
+        return [...this.props.users].map((user: any) => {
             return <li key={user._id} className="user-item">
                 <div className="user-item-details">
                     <span>{user.name} ({user.age})</span>
                 </div>
                 <div className="user-item-edit">
-                    <FormControl name={"age"} label={"Age"} placeholder={"Enter new age"}/>
-                    <FormControl name={"password"} label={"Password"} placeholder={"Enter new password"}/>
+                    <FormControl name={"editedAge"} label={"Age"} placeholder={"Enter new age"}
+                                 onChange={this.onUserEditFieldChange}/>
+                    <FormControl name={"editedPassword"} label={"Password"} placeholder={"Enter new password"}
+                                 onChange={this.onUserEditFieldChange}/>
                 </div>
                 <div className="user-item-buttons">
-                    <button className="login-btn" name="save">Save</button>
-                    <button className="login-btn" name="delete">Delete</button>
+                    <button className="login-btn" name="save"
+                            onClick={this.onSaveEditedHandler.bind(this, user._id)}>Save
+                    </button>
+                    <button className="login-btn" name="delete"
+                            onClick={this.onDeleteHandler.bind(this, user._id)}>Delete
+                    </button>
                 </div>
             </li>
         });
@@ -97,13 +107,14 @@ class UsersManager extends Component<any, any> {
                                          onChange={this.onInputChange}/>
                             <FormControl name={"newUserAge"} label={"Age"} placeholder={"Enter age here..."}
                                          onChange={this.onInputChange}/>
-                            <FormControl name={"newUserPassword"} label={"Password"} placeholder={"Enter password here..."}
+                            <FormControl name={"newUserPassword"} label={"Password"}
+                                         placeholder={"Enter password here..."}
                                          onChange={this.onInputChange}/>
                             <Button class={"login-btn"} click={this.onSave} type={"button"} text={"Save"}/>
                             <Button class={"login-btn"} click={this.onCancel} type={"button"} text={"Cancel"}/>
                         </form> : null}
                 </div>
-                <ul onClick={this.onUlClick}>
+                <ul>
                     {this.buildUsers()}
                 </ul>
             </div>

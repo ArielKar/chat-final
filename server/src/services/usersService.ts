@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import * as config from 'config';
+import * as uuidv4 from 'uuid/v4';
 
 import DataHandler from "../db/dataHandler";
 import {IUser} from "../models/interfaces/interfaces";
@@ -32,7 +33,7 @@ class UserService {
     async addUser(data) {
         let {name, age, password} = data;
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser: IUser = Object.assign({_id: Date.now().toString()}, {name, age, password: hashedPassword});
+        const newUser: IUser = Object.assign({_id: uuidv4()}, {name, age, password: hashedPassword});
         const users = await this.usersDataHandler.readFile();
         // TODO: check if username / email is taken
         users[newUser._id] = newUser;
