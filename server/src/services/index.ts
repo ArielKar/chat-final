@@ -1,5 +1,5 @@
-import UserService from './usersService';
-import GroupsService from "./groupsService";
-import MessagesService from './messagesService';
+import * as userService from './usersService';
+import * as groupsService from "./groupsService";
+import * as messagesService from './messagesService';
 
-export {UserService, GroupsService, MessagesService};
+export {userService, groupsService, messagesService};

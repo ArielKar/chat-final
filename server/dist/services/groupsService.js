@@ -35,230 +35,140 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var dataHandler_1 = require("../db/dataHandler");
-var uuidv4 = require("uuid/v4");
-var utils_1 = require("../helpers/utils");
-var GroupsService = /** @class */ (function () {
-    function GroupsService() {
-        this.groupsDataHandler = new dataHandler_1.default('groups');
-        this.groupsToUsersDataHandler = new dataHandler_1.default('groupsToUsers');
-        this.groupsToGroupsDataHandler = new dataHandler_1.default('groupsToGroups');
-        this.usersDataHandler = new dataHandler_1.default('users');
-    }
-    GroupsService.prototype.getAll = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, this.groupsDataHandler.readFile()];
-            });
+var db_1 = require("../db");
+var customError_1 = require("../helpers/customError");
+function getAll() {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.groupsDataAccess.getAll()];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
-    };
-    GroupsService.prototype.getTree = function (userData) {
-        return __awaiter(this, void 0, void 0, function () {
-            var groups, groupsToGroups, groupsToUsers, users, tree;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.groupsDataHandler.readFile()];
-                    case 1:
-                        groups = _a.sent();
-                        return [4 /*yield*/, this.groupsToGroupsDataHandler.readFile()];
-                    case 2:
-                        groupsToGroups = _a.sent();
-                        return [4 /*yield*/, this.groupsToUsersDataHandler.readFile()];
-                    case 3:
-                        groupsToUsers = _a.sent();
-                        return [4 /*yield*/, this.usersDataHandler.readFile()];
-                    case 4:
-                        users = _a.sent();
-                        tree = utils_1.generateTree(groups, groupsToGroups, users, groupsToUsers, userData);
-                        return [2 /*return*/, tree];
-                }
-            });
+    });
+}
+exports.getAll = getAll;
+function getTree(userData) {
+    return __awaiter(this, void 0, void 0, function () {
+        var users;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.groupsDataAccess.getAll()];
+                case 1:
+                    users = _a.sent();
+                    return [2 /*return*/, users];
+            }
         });
-    };
-    GroupsService.prototype.getGroup = function (groupId) {
-        return __awaiter(this, void 0, void 0, function () {
-            var groups;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.groupsDataHandler.readFile()];
-                    case 1:
-                        groups = _a.sent();
-                        if (!groups[groupId]) {
-                            throw new Error('Group does not exist');
-                        }
-                        return [2 /*return*/, groups[groupId]];
-                }
-            });
+    });
+}
+exports.getTree = getTree;
+function getGroup(groupId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var foundGroup;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.groupsDataAccess.getById(groupId)];
+                case 1:
+                    foundGroup = _a.sent();
+                    if (!foundGroup) {
+                        throw new customError_1.default('Group does not exist', 404);
+                    }
+                    return [2 /*return*/, foundGroup];
+            }
         });
-    };
-    GroupsService.prototype.getPrivateGroups = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var groups, privateGroups;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.groupsDataHandler.readFile()];
-                    case 1:
-                        groups = _a.sent();
-                        privateGroups = Object.keys(groups).map(function (group) { return groups[group]; }).filter(function (group) { return group.isPrivate; });
-                        return [2 /*return*/, privateGroups];
-                }
-            });
+    });
+}
+exports.getGroup = getGroup;
+function getPrivateGroups() {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.groupsDataAccess.getPrivateGroups()];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
-    };
-    GroupsService.prototype.addGroup = function (rawNewGroup, userAuth) {
-        return __awaiter(this, void 0, void 0, function () {
-            var name, parent, isPrivate, usersOfNewGroup, newGroup, groups, groupsToUsers, groupsToGroups;
-            var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        name = rawNewGroup.name, parent = rawNewGroup.parent, isPrivate = rawNewGroup.isPrivate, usersOfNewGroup = rawNewGroup.users;
-                        newGroup = { _id: uuidv4(), name: name, parent: parent, isPrivate: isPrivate };
-                        return [4 /*yield*/, this.groupsDataHandler.readFile()];
-                    case 1:
-                        groups = _a.sent();
-                        groups[newGroup._id] = newGroup;
-                        return [4 /*yield*/, this.groupsToUsersDataHandler.readFile()];
-                    case 2:
-                        groupsToUsers = _a.sent();
-                        groupsToUsers[newGroup._id] = usersOfNewGroup.concat([userAuth.id]);
-                        return [4 /*yield*/, this.groupsToGroupsDataHandler.readFile()];
-                    case 3:
-                        groupsToGroups = _a.sent();
-                        groupsToGroups[newGroup._id] = [];
-                        if (newGroup.parent) {
-                            groupsToGroups[newGroup.parent].push(newGroup._id);
-                        }
-                        // creating a private group for each user of usersOfGroup
-                        return [4 /*yield*/, Promise.all(usersOfNewGroup.map(function (userId) { return __awaiter(_this, void 0, void 0, function () {
-                                var newPrivateGroup;
-                                return __generator(this, function (_a) {
-                                    newPrivateGroup = { _id: uuidv4(), isPrivate: true, name: null, parent: newGroup._id };
-                                    groups[newPrivateGroup._id] = newPrivateGroup;
-                                    // creating association in groupsToUsers
-                                    groupsToUsers[newPrivateGroup._id] = [userId, userAuth.id];
-                                    // creating association between parentGroup to privateGroup in GroupsToGroups
-                                    groupsToGroups[newGroup._id].push(newPrivateGroup._id);
-                                    return [2 /*return*/];
-                                });
-                            }); }))];
-                    case 4:
-                        // creating a private group for each user of usersOfGroup
-                        _a.sent();
-                        return [4 /*yield*/, this.groupsToGroupsDataHandler.writeFile(groupsToGroups)];
-                    case 5:
-                        _a.sent();
-                        return [4 /*yield*/, this.groupsToUsersDataHandler.writeFile(groupsToUsers)];
-                    case 6:
-                        _a.sent();
-                        return [4 /*yield*/, this.groupsDataHandler.writeFile(groups)];
-                    case 7:
-                        _a.sent();
-                        return [2 /*return*/, newGroup];
-                }
-            });
+    });
+}
+exports.getPrivateGroups = getPrivateGroups;
+function getUsersOfGroup(groupId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var group;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, getGroup(groupId)];
+                case 1:
+                    group = _a.sent();
+                    return [2 /*return*/, group.users];
+            }
         });
-    };
-    GroupsService.prototype.updateGroup = function (idToUpdate, source, userAuth) {
-        return __awaiter(this, void 0, void 0, function () {
-            var newName, newUsers, groups, groupToUpdate, groupsToUsers, groupsToGroups;
-            var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        newName = source.name, newUsers = source.users;
-                        return [4 /*yield*/, this.groupsDataHandler.readFile()];
-                    case 1:
-                        groups = _a.sent();
-                        groupToUpdate = groups[idToUpdate];
-                        groupToUpdate.name = newName;
-                        return [4 /*yield*/, this.groupsToUsersDataHandler.readFile()];
-                    case 2:
-                        groupsToUsers = _a.sent();
-                        groupsToUsers[groupToUpdate._id] = groupsToUsers[groupToUpdate._id].concat(newUsers);
-                        return [4 /*yield*/, this.groupsToGroupsDataHandler.readFile()];
-                    case 3:
-                        groupsToGroups = _a.sent();
-                        if (!(newUsers.length !== 0)) return [3 /*break*/, 5];
-                        return [4 /*yield*/, Promise.all(newUsers.map(function (userId) { return __awaiter(_this, void 0, void 0, function () {
-                                var newPrivateGroup;
-                                return __generator(this, function (_a) {
-                                    newPrivateGroup = { _id: uuidv4(), isPrivate: true, name: null, parent: groupToUpdate._id };
-                                    groups[newPrivateGroup._id] = newPrivateGroup;
-                                    // creating association in groupsToUsers
-                                    groupsToUsers[newPrivateGroup._id] = [userId, userAuth.id];
-                                    // creating association between parentGroup to privateGroup in GroupsToGroups
-                                    groupsToGroups[groupToUpdate._id].push(newPrivateGroup._id);
-                                    return [2 /*return*/];
-                                });
-                            }); }))];
-                    case 4:
-                        _a.sent();
-                        _a.label = 5;
-                    case 5: return [4 /*yield*/, this.groupsToGroupsDataHandler.writeFile(groupsToGroups)];
-                    case 6:
-                        _a.sent();
-                        return [4 /*yield*/, this.groupsToUsersDataHandler.writeFile(groupsToUsers)];
-                    case 7:
-                        _a.sent();
-                        return [4 /*yield*/, this.groupsDataHandler.writeFile(groups)];
-                    case 8:
-                        _a.sent();
-                        return [2 /*return*/, groupToUpdate];
-                }
-            });
+    });
+}
+exports.getUsersOfGroup = getUsersOfGroup;
+function getGroupsOfParent(parentId) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.groupsDataAccess.getGroupsOfParent(parentId)];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
-    };
-    GroupsService.prototype.deleteGroup = function (groupId) {
-        return __awaiter(this, void 0, void 0, function () {
-            var groups, groupToDelete, groupsToUsers, groupsToGroups, index;
-            var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.groupsDataHandler.readFile()];
-                    case 1:
-                        groups = _a.sent();
-                        groupToDelete = groups[groupId];
-                        delete groups[groupToDelete._id];
-                        return [4 /*yield*/, this.groupsToUsersDataHandler.readFile()];
-                    case 2:
-                        groupsToUsers = _a.sent();
-                        delete groupsToUsers[groupToDelete._id];
-                        return [4 /*yield*/, this.groupsToGroupsDataHandler.readFile()];
-                    case 3:
-                        groupsToGroups = _a.sent();
-                        if (!groupsToGroups[groupToDelete._id]) return [3 /*break*/, 5];
-                        return [4 /*yield*/, Promise.all(groupsToGroups[groupToDelete._id].map(function (groupId) { return __awaiter(_this, void 0, void 0, function () {
-                                return __generator(this, function (_a) {
-                                    delete groups[groupId];
-                                    delete groupsToUsers[groupId];
-                                    return [2 /*return*/];
-                                });
-                            }); }))];
-                    case 4:
-                        _a.sent();
-                        delete groupsToGroups[groupToDelete._id];
-                        _a.label = 5;
-                    case 5:
-                        if (groupToDelete.parent) {
-                            index = groupsToGroups[groupToDelete.parent].findIndex(function (group) { return group === groupToDelete._id; });
-                            groupsToGroups[groupToDelete.parent].splice(index, 1);
-                        }
-                        return [4 /*yield*/, this.groupsDataHandler.writeFile(groups)];
-                    case 6:
-                        _a.sent();
-                        return [4 /*yield*/, this.groupsToUsersDataHandler.writeFile(groupsToUsers)];
-                    case 7:
-                        _a.sent();
-                        return [4 /*yield*/, this.groupsToGroupsDataHandler.writeFile(groupsToGroups)];
-                    case 8:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
+    });
+}
+exports.getGroupsOfParent = getGroupsOfParent;
+function getRootGroups() {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.groupsDataAccess.getRoots()];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
-    };
-    return GroupsService;
-}());
-exports.default = new GroupsService();
+    });
+}
+exports.getRootGroups = getRootGroups;
+function addGroup(rawNewGroup, userAuth) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.groupsDataAccess.add(rawNewGroup)];
+                case 1: 
+                // TODO: check if already name of group exist on same level
+                return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+}
+exports.addGroup = addGroup;
+function updateGroup(idToUpdate, source, userAuth) {
+    return __awaiter(this, void 0, void 0, function () {
+        var updatedGroup;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.groupsDataAccess.updateById(idToUpdate, source)];
+                case 1:
+                    updatedGroup = _a.sent();
+                    if (!updatedGroup)
+                        throw new customError_1.default('Invalid request: group does not exist', 404);
+                    return [2 /*return*/, updatedGroup];
+            }
+        });
+    });
+}
+exports.updateGroup = updateGroup;
+function deleteGroup(groupId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var isDeleted;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.groupsDataAccess.deleteById(groupId)];
+                case 1:
+                    isDeleted = _a.sent();
+                    if (!isDeleted)
+                        throw new customError_1.default('Invalid request: group does not exist', 404);
+                    return [2 /*return*/, true];
+            }
+        });
+    });
+}
+exports.deleteGroup = deleteGroup;
 //# sourceMappingURL=groupsService.js.map

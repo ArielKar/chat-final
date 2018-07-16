@@ -14,8 +14,8 @@ export function login(name, password) {
 
 export function getTree() {
     return async (dispatch, getState) => {
-        const {token} = getState();
-        const getTreeRes = await serverAPI.getTree(token);
+        const {token, user} = getState();
+        const getTreeRes = await serverAPI.getTree(token, user);
         dispatch(actions.setTree(getTreeRes));
     }
 }
@@ -79,17 +79,17 @@ export function setConversation(selectedElementID: number) {
         const {token, conversation} = getState();
         const messages = await serverAPI.getMessages(token, conversation);
         dispatch(actions.setMessages(messages));
-        dispatch(thunks.setConversationUsers(selectedElementID));
+        // dispatch(thunks.setConversationUsers(selectedElementID));
     }
 }
 
-export function setConversationUsers(selectedElement) {
-    return async (dispatch, getState) => {
-        const {token} = getState();
-        const users = await serverAPI.getUserOfGroup(selectedElement.id, token);
-        dispatch(actions.setUsersGroup(users));
-    }
-}
+// export function setConversationUsers(selectedElement) {
+//     return async (dispatch, getState) => {
+//         const {token} = getState();
+//         const users = await serverAPI.getUserOfGroup(selectedElement.id, token);
+//         dispatch(actions.setUsersGroup(users));
+//     }
+// }
 
 
 // messages related actions

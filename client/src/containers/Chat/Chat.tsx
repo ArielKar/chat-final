@@ -30,9 +30,10 @@ class Chat extends React.Component<any, any> {
                                  onCancel={this.props.onCancel}
                 />;
             case "edit":
+                if (!this.props.conversation) break;
                 const userIds = this.props.conversation.users;
                 if (userIds) {
-                    const users = userIds.map(userId => this.props.users.find((user: IUser) => user._id === userId));
+                    const users = this.props.conversation.users;
                     return <NewGroup mode={"edit"}
                                      name={this.props.conversation.name}
                                      users={this.props.users}
@@ -43,13 +44,12 @@ class Chat extends React.Component<any, any> {
                                      onCancel={this.props.onCancel}
                     />;
                 }
-            default:
-                return <Messaging user={this.props.user}
-                                  conversation={this.props.conversation}
-                                  messages={this.props.messages}
-                                  addNewMessage={this.props.addNewMessage}
-                />;
         }
+        return <Messaging user={this.props.user}
+                              conversation={this.props.conversation}
+                              messages={this.props.messages}
+                              addNewMessage={this.props.addNewMessage}
+            />;
     };
 
     render() {

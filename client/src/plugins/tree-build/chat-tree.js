@@ -32,7 +32,7 @@ function ChatTree(element) {
     function append(appendAfter, newElem) {
         if (appendAfter === element) {
             appendAfter.appendChild(newElem);
-        //     state.isLoaded = true;
+            //     state.isLoaded = true;
             return;
         }
         appendAfter.after(newElem);
@@ -47,7 +47,8 @@ function ChatTree(element) {
             newElement.appendChild(arrowDiv);
         }
         newElement.indentLevel = indentLevel;
-        newElement.__id = item.id;
+        newElement.__id = item._id;
+        newElement.__users = item.users;
         newElement.style.textIndent = `${indentLevel}em`;
         newElement.innerHTML = item.name + newElement.innerHTML;
         return newElement;
@@ -151,14 +152,16 @@ function ChatTree(element) {
 
     function setSelectedElement(nextElement) {
         state.selectedElement = nextElement;
-        events.emit('treeElementSelected', {id: state.selectedElement.__id, name: state.selectedElement.innerText});
+        events.emit('treeElementSelected', {
+            _id: state.selectedElement.__id,
+            name: state.selectedElement.innerText,
+            users: state.selectedElement.__users
+        });
     }
 
     function clear() {
         element.innerHTML = '';
-        // state.isLoaded = false;
         state.selectedElement = element;
-        // setSelectedElement(element);
     }
 
     return {

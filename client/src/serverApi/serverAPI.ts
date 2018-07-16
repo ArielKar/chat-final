@@ -1,6 +1,7 @@
 import {store} from "../store/store";
 import * as actions from '../store/actions';
 import io from 'socket.io-client';
+import {buildTree} from "../util/helpers";
 
 const BASE_URL = 'http://localhost:4000';
 let socket;
@@ -27,7 +28,7 @@ export async function login(name: string, password: string) {
     }
 }
 
-export async function getTree(token) {
+export async function getTree(token, user) {
     try {
         const response = await fetch(`${BASE_URL}/groups/tree`, {
             headers: {
@@ -36,16 +37,17 @@ export async function getTree(token) {
         });
         if (response.status === 200) {
             const parsedResponse = await response.json();
-            return parsedResponse.data;
+            return buildTree(parsedResponse.data, user);
         }
     } catch (err) {
+        console.log(err);
         store.dispatch(actions.setError('Oh oh, something went wrong'));
     }
 }
 
 export async function getMessages(token, conversation) {
     try {
-        const response = await fetch(`${BASE_URL}/messages/${conversation.id}`, {
+        const response = await fetch(`${BASE_URL}/messages/${conversation._id}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -108,7 +110,7 @@ export async function postGroup(newGroup, token) {
 
 export async function updateGroup(updatedGroup, token, conversation) {
     try {
-        const updateResponse = await fetch(`${BASE_URL}/groups/${conversation.id}`, {
+        const updateResponse = await fetch(`${BASE_URL}/groups/${conversation._id}`, {
             method: "PUT",
             body: JSON.stringify(updatedGroup),
             headers: {
@@ -121,23 +123,38 @@ export async function updateGroup(updatedGroup, token, conversation) {
     }
 }
 
-export async function getUserOfGroup(groupId, token) {
+export async function getNextGroups(groupId, token) {
     try {
-        const usersResponse = await fetch(`${BASE_URL}/users/group/${groupId}`, {
+        const nextGroupsRes = await fetch(`${BASE_URL}/groups/${groupId}/groups`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
-        const users = await usersResponse.json();
-        return users.data;
+        const nextGroups = await nextGroupsRes.json();
+        console.log(nextGroups);
+        return nextGroups.data;
     } catch (err) {
         console.log(err);
     }
 }
 
+// export async function getUserOfGroup(groupId, token) {
+//     try {
+//         const usersResponse = await fetch(`${BASE_URL}/groups/${groupId}/users`, {
+//             headers: {
+//                 Authorization: `Bearer ${token}`
+//             }
+//         });
+//         const users = await usersResponse.json();
+//         return users.data;
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
+
 export async function deleteGroup(token, conversation) {
     try {
-        const deleteResponse = await fetch(`${BASE_URL}/groups/${conversation.id}`, {
+        const deleteResponse = await fetch(`${BASE_URL}/groups/${conversation._id}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${token}`
@@ -195,17 +212,19 @@ export async function deleteUser(userId, token) {
     }
 }
 
-export async function postMessage(msgArray) {
+export async function postMessage(msg) {
     try {
-        socket.emit("postMessage", msgArray);
+        socket.emit("postMessage", msg);
     } catch (err) {
         console.log(err.message);
     }
 }
 
-async function handleReceivedMessages(newMessage, conversation) {
+async function handleReceivedMessages(newMessage) {
     try {
-        if (conversation && conversation.id === newMessage.recipient) {
+        const {conversation} = store.getState();
+        // console.log(conversation._id.toString() === newMessage.recipient._id.toString());
+        if (conversation && conversation._id === newMessage.recipient._id.toString()) {
             store.dispatch(actions.addMessage(newMessage));
         }
     } catch (err) {

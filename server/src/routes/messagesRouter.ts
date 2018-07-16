@@ -3,6 +3,6 @@ import * as controllers from '../controllers';
 
 const messagesRouter = express.Router();
 
-messagesRouter.get('/:conversation', controllers.MessagesController.getMessagesById);
+messagesRouter.get('/:conversation', controllers.messagesController.getMessagesById);
 
 export default messagesRouter;

@@ -40,6 +40,9 @@ var http = require("http");
 var socketIo = require("socket.io");
 var services = require("./services");
 var app_1 = require("./app");
+var mongoose = require("mongoose");
+mongoose.connect('mongodb://localhost:27017/chat')
+    .then(function () { return console.log('Database connection established...'); });
 var server = http.createServer(app_1.default);
 var io = socketIo(server);
 io.on("connection", function (socket) {
@@ -49,9 +52,11 @@ io.on("connection", function (socket) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, services.MessagesService.AddMessage(data)];
+                    return [4 /*yield*/, services.messagesService.AddMessage(data)];
                 case 1:
                     savedMessage = _a.sent();
+                    console.log("IN THE SOCKET:");
+                    console.log(savedMessage);
                     io.sockets.emit('receiveMessage', savedMessage);
                     return [3 /*break*/, 3];
                 case 2:

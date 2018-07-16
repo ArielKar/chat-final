@@ -35,45 +35,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var dataHandler_1 = require("../db/dataHandler");
-var uuidv4 = require("uuid/v4");
-var MessagesService = /** @class */ (function () {
-    function MessagesService() {
-        this.messagesDataHandler = new dataHandler_1.default('messages');
-    }
-    MessagesService.prototype.getMessage = function (id) {
-        return __awaiter(this, void 0, void 0, function () {
-            var messages;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.messagesDataHandler.readFile()];
-                    case 1:
-                        messages = _a.sent();
-                        return [2 /*return*/, messages[id]];
-                }
-            });
+var db_1 = require("../db");
+function getMessage(id) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.messagesDataAccess.getAllByGroup(id)];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
-    };
-    MessagesService.prototype.AddMessage = function (message) {
-        return __awaiter(this, void 0, void 0, function () {
-            var messages;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.messagesDataHandler.readFile()];
-                    case 1:
-                        messages = _a.sent();
-                        message._id = uuidv4();
-                        messages[message.recipient] = messages[message.recipient] || [];
-                        messages[message.recipient].push(message);
-                        return [4 /*yield*/, this.messagesDataHandler.writeFile(messages)];
-                    case 2:
-                        _a.sent();
-                        return [2 /*return*/, message];
-                }
-            });
+    });
+}
+exports.getMessage = getMessage;
+function AddMessage(message) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.messagesDataAccess.add(message)];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
         });
-    };
-    return MessagesService;
-}());
-exports.default = new MessagesService();
+    });
+}
+exports.AddMessage = AddMessage;
 //# sourceMappingURL=messagesService.js.map

@@ -38,198 +38,171 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var services = require("../services");
 var utils_1 = require("../helpers/utils");
 //TODO: req.body and params validation
-var UsersController = /** @class */ (function () {
-    function UsersController() {
-    }
-    UsersController.getAllUsers = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var users, err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services.UserService.getAll()];
-                    case 1:
-                        users = _a.sent();
-                        res.status(200).json({
-                            message: 'Fetched all users',
-                            data: users.map(utils_1.removePassword)
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_1 = _a.sent();
-                        console.log('In getAllUsers', err_1.message);
-                        res.status(500).json({
-                            error: err_1.message
-                        });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
+function getAllUsers(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var users, err_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.userService.getAll()];
+                case 1:
+                    users = _a.sent();
+                    res.status(200).json({
+                        message: 'Fetched all users',
+                        data: users.map(utils_1.removePassword)
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_1 = _a.sent();
+                    console.log('In getAllUsers', err_1.message);
+                    res.status(500).json({
+                        error: err_1.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    };
-    UsersController.getUserById = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var user, err_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services.UserService.getUser(req.params.userId)];
-                    case 1:
-                        user = _a.sent();
-                        res.status(200).json({
-                            message: 'Fetched one user',
-                            data: utils_1.removePassword(user)
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_2 = _a.sent();
-                        console.log('In getUserById', err_2.message);
-                        res.status(500).json({
-                            error: err_2.message
-                        });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
+    });
+}
+exports.getAllUsers = getAllUsers;
+function getUserById(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var user, err_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.userService.getUser(req.params.userId)];
+                case 1:
+                    user = _a.sent();
+                    res.status(200).json({
+                        message: 'Fetched one user',
+                        data: utils_1.removePassword(user)
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_2 = _a.sent();
+                    console.log('In getUserById', err_2.message);
+                    res.status(500).json({
+                        error: err_2.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    };
-    UsersController.getUsersByGroup = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var users, err_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services.UserService.getUsersByGroup(req.params.groupId)];
-                    case 1:
-                        users = _a.sent();
-                        res.status(200).json({
-                            message: 'Fetched users by group',
-                            data: users
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_3 = _a.sent();
-                        console.log("IN getUsersByGroup", err_3.message);
-                        res.status(500).json({
-                            error: err_3.message
-                        });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
+    });
+}
+exports.getUserById = getUserById;
+function addUser(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var addedUser, err_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.userService.addUser(req.body)];
+                case 1:
+                    addedUser = _a.sent();
+                    res.status(200).json({
+                        message: 'Added user',
+                        data: utils_1.removePassword(addedUser)
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_3 = _a.sent();
+                    console.log('In add user: ', err_3.message);
+                    res.status(500).json({
+                        error: err_3.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    };
-    UsersController.addUser = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var addedUser, err_4;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services.UserService.addUser(req.body)];
-                    case 1:
-                        addedUser = _a.sent();
-                        res.status(200).json({
-                            message: 'Added user',
-                            data: utils_1.removePassword(addedUser)
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_4 = _a.sent();
-                        console.log('In add user: ', err_4.message);
-                        res.status(500).json({
-                            error: err_4.message
-                        });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
+    });
+}
+exports.addUser = addUser;
+function updateUserById(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var updatedUser, err_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.userService.updateUser(req.params.userId, req.body)];
+                case 1:
+                    updatedUser = _a.sent();
+                    res.status(200).json({
+                        message: 'User updated',
+                        data: utils_1.removePassword(updatedUser)
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_4 = _a.sent();
+                    console.log('In updateUserById: ', err_4.message);
+                    res.status(500).json({
+                        error: err_4.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    };
-    UsersController.updateUserById = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var updatedUser, err_5;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services.UserService.updateUser(req.params.userId, req.body)];
-                    case 1:
-                        updatedUser = _a.sent();
-                        res.status(200).json({
-                            message: 'User updated',
-                            data: utils_1.removePassword(updatedUser)
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_5 = _a.sent();
-                        console.log('In updateUserById: ', err_5.message);
-                        res.status(500).json({
-                            error: err_5.message
-                        });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
+    });
+}
+exports.updateUserById = updateUserById;
+function deleteUserById(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var result, err_5;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.userService.deleteUser(req.params.userId)];
+                case 1:
+                    result = _a.sent();
+                    res.status(200).json({
+                        message: 'User deleted'
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_5 = _a.sent();
+                    console.log("In deleteUserById", err_5.message);
+                    res.status(err_5.status || 500).json({
+                        error: err_5.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    };
-    UsersController.deleteUserById = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var result, err_6;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services.UserService.deleteUser(req.params.userId)];
-                    case 1:
-                        result = _a.sent();
-                        res.status(200).json({
-                            message: 'User deleted'
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_6 = _a.sent();
-                        console.log("In deleteUserById", err_6.message);
-                        res.status(err_6.status || 500).json({
-                            error: err_6.message
-                        });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
+    });
+}
+exports.deleteUserById = deleteUserById;
+function loginUser(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var result, err_6;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.userService.authenticate(req.body)];
+                case 1:
+                    result = _a.sent();
+                    res.status(200).json({
+                        message: 'Logged in successfully',
+                        user: utils_1.removePassword(result.foundUser),
+                        token: result.token
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_6 = _a.sent();
+                    res.status(err_6.status || 500).json({
+                        message: err_6.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    };
-    UsersController.loginUser = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var result, err_7;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services.UserService.authenticate(req.body)];
-                    case 1:
-                        result = _a.sent();
-                        res.status(200).json({
-                            message: 'Logged in successfully',
-                            user: utils_1.removePassword(result.foundUser),
-                            token: result.token
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_7 = _a.sent();
-                        res.status(err_7.status || 500).json({
-                            message: err_7.message
-                        });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return UsersController;
-}());
-exports.default = UsersController;
+    });
+}
+exports.loginUser = loginUser;
 //# sourceMappingURL=usersController.js.map

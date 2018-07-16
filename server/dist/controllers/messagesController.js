@@ -36,36 +36,31 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var services = require("../services");
-var MessagesController = /** @class */ (function () {
-    function MessagesController() {
-    }
-    MessagesController.getMessagesById = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var messages, err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services.MessagesService.getMessage(req.params.conversation)];
-                    case 1:
-                        messages = _a.sent();
-                        res.status(200).json({
-                            messages: 'Fetched messages',
-                            data: messages
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_1 = _a.sent();
-                        res.status(err_1.status || 500).json({
-                            error: err_1.message
-                        });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
+function getMessagesById(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var messages, err_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.messagesService.getMessage(req.params.conversation)];
+                case 1:
+                    messages = _a.sent();
+                    res.status(200).json({
+                        messages: 'Fetched messages',
+                        data: messages
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_1 = _a.sent();
+                    res.status(err_1.status || 500).json({
+                        error: err_1.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    };
-    return MessagesController;
-}());
-exports.default = MessagesController;
+    });
+}
+exports.getMessagesById = getMessagesById;
 //# sourceMappingURL=messagesController.js.map

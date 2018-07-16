@@ -60,7 +60,7 @@ function rootReducer(state: IState, action: AnyAction): IState {
             };
         case actionTypes.ADD_MESSAGE:
             const messages = state.messages || [];
-            const updatedMessages = messages.concat(action.payload.newMessage);
+            const updatedMessages = messages.concat(action.payload.message);
             return {
                 ...state,
                 messages: updatedMessages

@@ -38,191 +38,111 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var bcrypt = require("bcrypt");
 var jwt = require("jsonwebtoken");
 var config = require("config");
-var uuidv4 = require("uuid/v4");
-var dataHandler_1 = require("../db/dataHandler");
+var db_1 = require("../db");
 var customError_1 = require("../helpers/customError");
-var UserService = /** @class */ (function () {
-    function UserService() {
-        this.usersDataHandler = new dataHandler_1.default('users');
-        this.groupsToUsersDataHandler = new dataHandler_1.default('groupsToUsers');
-    }
-    UserService.prototype.getAll = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var users, usersArr;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.usersDataHandler.readFile()];
-                    case 1:
-                        users = _a.sent();
-                        usersArr = Object.keys(users).map(function (user) { return users[user]; });
-                        return [2 /*return*/, usersArr];
-                }
-            });
-        });
-    };
-    UserService.prototype.getUser = function (userId) {
-        return __awaiter(this, void 0, void 0, function () {
-            var users;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.usersDataHandler.readFile()];
-                    case 1:
-                        users = _a.sent();
-                        if (!users[userId]) {
-                            throw new Error('Invalid request: user does not exist');
-                        }
-                        return [2 /*return*/, users[userId]];
-                }
-            });
-        });
-    };
-    UserService.prototype.addUser = function (data) {
-        return __awaiter(this, void 0, void 0, function () {
-            var name, age, password, hashedPassword, newUser, users, writingResult;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        name = data.name, age = data.age, password = data.password;
-                        return [4 /*yield*/, bcrypt.hash(password, 10)];
-                    case 1:
-                        hashedPassword = _a.sent();
-                        newUser = Object.assign({ _id: uuidv4() }, { name: name, age: age, password: hashedPassword });
-                        return [4 /*yield*/, this.usersDataHandler.readFile()];
-                    case 2:
-                        users = _a.sent();
-                        // TODO: check if username / email is taken
-                        users[newUser._id] = newUser;
-                        return [4 /*yield*/, this.usersDataHandler.writeFile(users)];
-                    case 3:
-                        writingResult = _a.sent();
-                        if (!writingResult) {
-                            throw new Error('Something went wrong writing the file');
-                        }
-                        return [2 /*return*/, newUser];
-                }
-            });
-        });
-    };
-    UserService.prototype.getUsersByGroup = function (groupId) {
-        return __awaiter(this, void 0, void 0, function () {
-            var groupsToUsers;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.groupsToUsersDataHandler.readFile()];
-                    case 1:
-                        groupsToUsers = _a.sent();
-                        return [2 /*return*/, groupsToUsers[groupId]];
-                }
-            });
-        });
-    };
-    UserService.prototype.updateUser = function (userId, newProps) {
-        return __awaiter(this, void 0, void 0, function () {
-            var users, userToUpdate, _a, _b, _i, prop, _c, _d, result;
-            return __generator(this, function (_e) {
-                switch (_e.label) {
-                    case 0: return [4 /*yield*/, this.usersDataHandler.readFile()];
-                    case 1:
-                        users = _e.sent();
-                        userToUpdate = users[userId];
-                        if (!userToUpdate) {
-                            throw new Error('Invalid request: user does not exist');
-                        }
-                        _a = [];
-                        for (_b in newProps)
-                            _a.push(_b);
-                        _i = 0;
-                        _e.label = 2;
-                    case 2:
-                        if (!(_i < _a.length)) return [3 /*break*/, 6];
-                        prop = _a[_i];
-                        if (!(userToUpdate.hasOwnProperty(prop) && !!newProps[prop])) return [3 /*break*/, 5];
-                        if (!(prop === "password")) return [3 /*break*/, 4];
-                        _c = userToUpdate;
-                        _d = prop;
-                        return [4 /*yield*/, bcrypt.hash(newProps[prop], 10)];
-                    case 3:
-                        _c[_d] = _e.sent();
-                        return [3 /*break*/, 5];
-                    case 4:
-                        userToUpdate[prop] = newProps[prop];
-                        _e.label = 5;
-                    case 5:
-                        _i++;
-                        return [3 /*break*/, 2];
-                    case 6: return [4 /*yield*/, this.usersDataHandler.writeFile(users)];
-                    case 7:
-                        result = _e.sent();
-                        if (result) {
-                            return [2 /*return*/, userToUpdate];
-                        }
-                        else {
-                            throw new Error('something went wrong writing the file');
-                        }
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    UserService.prototype.deleteUser = function (userId) {
-        return __awaiter(this, void 0, void 0, function () {
-            var users, writeResult;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.usersDataHandler.readFile()];
-                    case 1:
-                        users = _a.sent();
-                        if (!users[userId]) {
-                            throw new customError_1.default('Invalid request: user does not exist', 404);
-                        }
-                        delete users[userId];
-                        return [4 /*yield*/, this.usersDataHandler.writeFile(users)];
-                    case 2:
-                        writeResult = _a.sent();
-                        if (!!writeResult) {
-                            return [2 /*return*/, true];
-                        }
-                        else {
-                            throw new Error('something went wrong writing the file');
-                        }
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    UserService.prototype.authenticate = function (data) {
-        return __awaiter(this, void 0, void 0, function () {
-            var users, foundUser, user, result, token;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.usersDataHandler.readFile()];
-                    case 1:
-                        users = _a.sent();
-                        for (user in users) {
-                            if (users[user].name === data.name) {
-                                foundUser = users[user];
-                            }
-                        }
-                        if (!!foundUser) return [3 /*break*/, 2];
-                        // when no such user
+function authenticate(attempt) {
+    return __awaiter(this, void 0, void 0, function () {
+        var foundUser, isPassword, token;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.usersDataAccess.getByName(attempt.name)];
+                case 1:
+                    foundUser = _a.sent();
+                    if (!foundUser)
                         throw new customError_1.default('Invalid user credentials', 401);
-                    case 2: return [4 /*yield*/, bcrypt.compare(data.password, foundUser.password)];
-                    case 3:
-                        result = _a.sent();
-                        if (!result) {
-                            // when user found but password wont match
-                            throw new customError_1.default('Invalid user credentials', 401);
-                        }
-                        token = jwt.sign({
-                            id: foundUser._id,
-                            name: foundUser.name
-                        }, config.get('JWT_SECRET'), { expiresIn: '1h' });
-                        return [2 /*return*/, { foundUser: foundUser, token: token }];
-                }
-            });
+                    return [4 /*yield*/, bcrypt.compare(attempt.password, foundUser.password)];
+                case 2:
+                    isPassword = _a.sent();
+                    if (!isPassword)
+                        throw new customError_1.default('Invalid user credentials', 401);
+                    token = jwt.sign({
+                        id: foundUser._id,
+                        name: foundUser.name
+                    }, config.get('JWT_SECRET'), { expiresIn: '1h' });
+                    return [2 /*return*/, { foundUser: foundUser, token: token }];
+            }
         });
-    };
-    return UserService;
-}());
-exports.default = new UserService();
+    });
+}
+exports.authenticate = authenticate;
+function getAll() {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.usersDataAccess.getAll()];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+}
+exports.getAll = getAll;
+function getUser(userId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var foundUser;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.usersDataAccess.getById(userId)];
+                case 1:
+                    foundUser = _a.sent();
+                    if (!foundUser)
+                        throw new Error('Invalid request: user does not exist');
+                    return [2 /*return*/, foundUser];
+            }
+        });
+    });
+}
+exports.getUser = getUser;
+function addUser(data) {
+    return __awaiter(this, void 0, void 0, function () {
+        var name, age, password, hashedPassword, newUser;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    name = data.name, age = data.age, password = data.password;
+                    return [4 /*yield*/, bcrypt.hash(password, 10)];
+                case 1:
+                    hashedPassword = _a.sent();
+                    newUser = { name: name, age: age, password: hashedPassword };
+                    return [4 /*yield*/, db_1.usersDataAccess.add(newUser)];
+                case 2: 
+                // TODO: check if username / email is taken
+                return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+}
+exports.addUser = addUser;
+function updateUser(userId, newProps) {
+    return __awaiter(this, void 0, void 0, function () {
+        var updatedUser;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.usersDataAccess.updateById(userId, newProps)];
+                case 1:
+                    updatedUser = _a.sent();
+                    if (!updatedUser) {
+                        throw new Error('Invalid request: user does not exist');
+                    }
+                    return [2 /*return*/, updatedUser];
+            }
+        });
+    });
+}
+exports.updateUser = updateUser;
+function deleteUser(userId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var isDeleted;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, db_1.usersDataAccess.deleteById(userId)];
+                case 1:
+                    isDeleted = _a.sent();
+                    if (!isDeleted)
+                        throw new customError_1.default('Invalid request: user does not exist', 404);
+                    return [2 /*return*/, true];
+            }
+        });
+    });
+}
+exports.deleteUser = deleteUser;
 //# sourceMappingURL=usersService.js.map

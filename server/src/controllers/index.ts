@@ -1,5 +1,5 @@
-import GroupsController from './groupsController';
-import UsersController from './usersController';
-import MessagesController from './messagesController';
+import * as groupsController from './groupsController';
+import * as usersController from './usersController';
+import * as messagesController from './messagesController';
 
-export {GroupsController, UsersController, MessagesController};
+export {groupsController, usersController, messagesController};

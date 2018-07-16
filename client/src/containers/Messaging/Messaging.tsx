@@ -16,14 +16,14 @@ class Messaging extends React.Component<any, any> {
     createNewMsgObj(messageBody: string) {
         return {
             sender: this.props.user,
-            recipient: this.props.conversation.id,
+            recipient: this.props.conversation._id,
             body: messageBody,
             time: this.getTime()
         };
     }
 
     getTime() {
-        return new Date().toLocaleTimeString();
+        return new Date().toLocaleString();
     }
 
     render() {

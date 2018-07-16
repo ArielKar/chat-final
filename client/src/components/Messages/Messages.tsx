@@ -7,12 +7,12 @@ import Message from "./Message/Message";
 const Messages = (props: any) => {
 
     const render = () => {
-        if (!props.messages || props.messages === []) {
+        if (!props.messages || props.messages.length == 0) {
             return <div className="inform">Send a message to start a conversation</div>;
         } else {
-            return props.messages.map((message: any, idx) => {
-                return <Message key={idx + 1} type={props.user.name === message.sender ? "sent" : "received"}
-                                sender={message.sender} messageBody={message.body} time={message.time}/>
+            return props.messages.map((message: any) => {
+                return <Message key={message._id} type={props.user._id === message.sender._id ? "sent" : "received"}
+                                sender={message.sender.name} messageBody={message.body} time={message.time}/>
             });
         }
     };

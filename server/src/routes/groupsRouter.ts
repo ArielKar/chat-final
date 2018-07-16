@@ -3,18 +3,24 @@ import * as controllers from '../controllers';
 
 const groupsRouter = express.Router();
 
-groupsRouter.get('/', controllers.GroupsController.getAllGroups);
+groupsRouter.get('/', controllers.groupsController.getAllGroups);
 
-groupsRouter.get('/private', controllers.GroupsController.getPrivateGroups);
+groupsRouter.get('/private', controllers.groupsController.getPrivateGroups);
 
-groupsRouter.get('/tree', controllers.GroupsController.getGroupsAsTree);
+groupsRouter.get('/tree', controllers.groupsController.getGroupsAsTree);
 
-groupsRouter.get('/:groupId', controllers.GroupsController.getGroupById);
+groupsRouter.get('/root', controllers.groupsController.getRootGroups);
 
-groupsRouter.post('/', controllers.GroupsController.addGroup);
+groupsRouter.get('/:groupId', controllers.groupsController.getGroupById);
 
-groupsRouter.put('/:groupId', controllers.GroupsController.updateGroupById);
+groupsRouter.get('/:groupId/users', controllers.groupsController.getUsersOfGroup);
 
-groupsRouter.delete('/:groupId', controllers.GroupsController.deleteGroupById);
+groupsRouter.get('/:parentId/groups', controllers.groupsController.getGroupsOfParent);
+
+groupsRouter.post('/', controllers.groupsController.addGroup);
+
+groupsRouter.put('/:groupId', controllers.groupsController.updateGroupById);
+
+groupsRouter.delete('/:groupId', controllers.groupsController.deleteGroupById);
 
 export default groupsRouter;

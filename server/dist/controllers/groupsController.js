@@ -37,192 +37,267 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var services = require("../services");
 //TODO: req.body and params validation
-var GroupsController = /** @class */ (function () {
-    function GroupsController() {
-    }
-    GroupsController.getAllGroups = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var data, err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services.GroupsService.getAll()];
-                    case 1:
-                        data = _a.sent();
-                        res.status(200).json({
-                            message: 'Fetched all groups',
-                            data: data
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_1 = _a.sent();
-                        res.status(404).json({
-                            error: err_1.message
-                        });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
+function getAllGroups(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var data, err_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.groupsService.getAll()];
+                case 1:
+                    data = _a.sent();
+                    res.status(200).json({
+                        message: 'Fetched all groups',
+                        data: data
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_1 = _a.sent();
+                    res.status(404).json({
+                        error: err_1.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    };
-    GroupsController.getPrivateGroups = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var privateGroups, err_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services.GroupsService.getPrivateGroups()];
-                    case 1:
-                        privateGroups = _a.sent();
-                        console.log(privateGroups);
-                        res.status(200).json({
-                            message: 'Fetched private Groups',
-                            data: privateGroups
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_2 = _a.sent();
-                        res.status(500).json({
-                            error: err_2.message
-                        });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
+    });
+}
+exports.getAllGroups = getAllGroups;
+function getPrivateGroups(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var privateGroups, err_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.groupsService.getPrivateGroups()];
+                case 1:
+                    privateGroups = _a.sent();
+                    res.status(200).json({
+                        message: 'Fetched private Groups',
+                        data: privateGroups
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_2 = _a.sent();
+                    res.status(500).json({
+                        error: err_2.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    };
-    GroupsController.getGroupsAsTree = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var data, err_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services.GroupsService.getTree(req.userAuth)];
-                    case 1:
-                        data = _a.sent();
-                        res.status(200).json({
-                            message: 'Fetched tree data',
-                            data: data
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_3 = _a.sent();
-                        console.log(err_3);
-                        res.status(500).json({
-                            error: err_3.message
-                        });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
+    });
+}
+exports.getPrivateGroups = getPrivateGroups;
+function getUsersOfGroup(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var users, err_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.groupsService.getUsersOfGroup(req.params.groupId)];
+                case 1:
+                    users = _a.sent();
+                    res.status(200).json({
+                        message: 'Fetched users of group',
+                        data: users
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_3 = _a.sent();
+                    res.status(err_3.status || 500).json({
+                        error: err_3.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    };
-    GroupsController.getGroupById = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var data, err_4;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services.GroupsService.getGroup(req.params.groupId)];
-                    case 1:
-                        data = _a.sent();
-                        res.status(200).json({
-                            message: 'Fetched one group',
-                            data: data
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_4 = _a.sent();
-                        console.log(err_4.message);
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
+    });
+}
+exports.getUsersOfGroup = getUsersOfGroup;
+function getGroupsAsTree(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var data, err_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.groupsService.getTree(req.userAuth)];
+                case 1:
+                    data = _a.sent();
+                    res.status(200).json({
+                        message: 'Fetched tree data',
+                        data: data
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_4 = _a.sent();
+                    res.status(err_4.status || 500).json({
+                        error: err_4.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    };
-    GroupsController.addGroup = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var data, err_5;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services.GroupsService.addGroup(req.body, req.userAuth)];
-                    case 1:
-                        data = _a.sent();
-                        res.status(200).json({
-                            message: 'Group created',
-                            data: data
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_5 = _a.sent();
-                        console.log('In addGroup: ', err_5.message);
-                        res.status(500).json({
-                            error: err_5.message
-                        });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
+    });
+}
+exports.getGroupsAsTree = getGroupsAsTree;
+function getRootGroups(res, req) {
+    return __awaiter(this, void 0, void 0, function () {
+        var rootGroups, err_5;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.groupsService.getRootGroups()];
+                case 1:
+                    rootGroups = _a.sent();
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_5 = _a.sent();
+                    res.status(err_5.status || 500).json({
+                        error: err_5.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    };
-    GroupsController.updateGroupById = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var updatedGroup, err_6;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        console.log(req.body);
-                        console.log(req.params.groupId);
-                        return [4 /*yield*/, services.GroupsService.updateGroup(req.params.groupId, req.body, req.userAuth)];
-                    case 1:
-                        updatedGroup = _a.sent();
-                        res.status(200).json({
-                            message: "group updated",
-                            data: updatedGroup
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_6 = _a.sent();
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
+    });
+}
+exports.getRootGroups = getRootGroups;
+function getGroupsOfParent(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var groups, err_6;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.groupsService.getGroupsOfParent(req.params.parentId)];
+                case 1:
+                    groups = _a.sent();
+                    res.status(200).json({
+                        message: "Fetched requested groups",
+                        data: groups
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_6 = _a.sent();
+                    res.status(err_6.status || 500).json({
+                        error: err_6.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    };
-    GroupsController.deleteGroupById = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () {
-            var err_7;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, services.GroupsService.deleteGroup(req.params.groupId)];
-                    case 1:
-                        _a.sent();
-                        res.status(200).json({
-                            message: "Group deleted successfully"
-                        });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        err_7 = _a.sent();
-                        console.log("In deleteGroup: ", err_7);
-                        res.status(err_7.status || 500).json({
-                            error: err_7.message
-                        });
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
+    });
+}
+exports.getGroupsOfParent = getGroupsOfParent;
+function getGroupById(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var data, err_7;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.groupsService.getGroup(req.params.groupId)];
+                case 1:
+                    data = _a.sent();
+                    res.status(200).json({
+                        message: 'Fetched one group',
+                        data: data
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_7 = _a.sent();
+                    console.log(err_7.message);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
         });
-    };
-    return GroupsController;
-}());
-exports.default = GroupsController;
+    });
+}
+exports.getGroupById = getGroupById;
+function addGroup(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var data, err_8;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.groupsService.addGroup(req.body, req.userAuth)];
+                case 1:
+                    data = _a.sent();
+                    res.status(200).json({
+                        message: 'Group created',
+                        data: data
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_8 = _a.sent();
+                    res.status(err_8.status || 500).json({
+                        error: err_8.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.addGroup = addGroup;
+function updateGroupById(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var updatedGroup, err_9;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.groupsService.updateGroup(req.params.groupId, req.body, req.userAuth)];
+                case 1:
+                    updatedGroup = _a.sent();
+                    res.status(200).json({
+                        message: "group updated",
+                        data: updatedGroup
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_9 = _a.sent();
+                    res.status(err_9.status || 500).json({
+                        error: err_9.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.updateGroupById = updateGroupById;
+function deleteGroupById(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var err_10;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, services.groupsService.deleteGroup(req.params.groupId)];
+                case 1:
+                    _a.sent();
+                    res.status(200).json({
+                        message: "Group deleted successfully"
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    err_10 = _a.sent();
+                    res.status(err_10.status || 500).json({
+                        error: err_10.message
+                    });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.deleteGroupById = deleteGroupById;
 //# sourceMappingURL=groupsController.js.map
