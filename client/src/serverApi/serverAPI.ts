@@ -138,20 +138,6 @@ export async function getNextGroups(groupId, token) {
     }
 }
 
-// export async function getUserOfGroup(groupId, token) {
-//     try {
-//         const usersResponse = await fetch(`${BASE_URL}/groups/${groupId}/users`, {
-//             headers: {
-//                 Authorization: `Bearer ${token}`
-//             }
-//         });
-//         const users = await usersResponse.json();
-//         return users.data;
-//     } catch (err) {
-//         console.log(err);
-//     }
-// }
-
 export async function deleteGroup(token, conversation) {
     try {
         const deleteResponse = await fetch(`${BASE_URL}/groups/${conversation._id}`, {
@@ -222,8 +208,7 @@ export async function postMessage(msg) {
 
 async function handleReceivedMessages(newMessage) {
     try {
-        const {conversation} = store.getState();
-        // console.log(conversation._id.toString() === newMessage.recipient._id.toString());
+        const {conversation} = store.getState().groupsRdcr;
         if (conversation && conversation._id === newMessage.recipient._id.toString()) {
             store.dispatch(actions.addMessage(newMessage));
         }

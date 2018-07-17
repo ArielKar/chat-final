@@ -66,7 +66,7 @@ class App extends React.Component<any, {}> {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.user
+        user: state.usersRdcr.user
     };
 };
 

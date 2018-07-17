@@ -64,7 +64,10 @@ class Chat extends React.Component<any, any> {
 }
 
 const mapStateToProps = (state) => {
-    const {user, users, tree, conversation, messages, mode} = state;
+    const {user, users} = state.usersRdcr;
+    const {tree, conversation} = state.groupsRdcr;
+    const {messages} = state.messagesRdcr;
+    const {mode} = state.statesRdcr;
     return {
         user,
         users,

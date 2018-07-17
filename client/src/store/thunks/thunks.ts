@@ -14,7 +14,7 @@ export function login(name, password) {
 
 export function getTree() {
     return async (dispatch, getState) => {
-        const {token, user} = getState();
+        const {token, user} = getState().usersRdcr;
         const getTreeRes = await serverAPI.getTree(token, user);
         dispatch(actions.setTree(getTreeRes));
     }
@@ -23,7 +23,7 @@ export function getTree() {
 //users related actions
 export function addUser(newUser) {
     return async (dispatch, getState) => {
-        const {token} = getState();
+        const {token} = getState().usersRdcr;
         const createdUser = await serverAPI.addUser(newUser, token);
         const users = await serverAPI.getPrivateGroups(token);
         dispatch(actions.setUsers(users));
@@ -32,7 +32,7 @@ export function addUser(newUser) {
 
 export function updateUser(changedUser) {
     return async (dispatch, getState) => {
-        const {token} = getState();
+        const {token} = getState().usersRdcr;
         const updatedUser = await serverAPI.updateUser(changedUser, token);
         const users = await serverAPI.getPrivateGroups(token);
         dispatch(actions.setUsers(users));
@@ -41,7 +41,7 @@ export function updateUser(changedUser) {
 
 export function deleteUser(userId) {
     return async (dispatch, getState) => {
-        const {token} = getState();
+        const {token} = getState().usersRdcr;
         const deleted = await serverAPI.deleteUser(userId, token);
         const users = await serverAPI.getPrivateGroups(token);
         dispatch(actions.setUsers(users));
@@ -51,7 +51,7 @@ export function deleteUser(userId) {
 // group related actions
 export function addNewGroup(newGroup) {
     return async (dispatch, getState) => {
-        const {token} = getState();
+        const {token} = getState().usersRdcr;
         const addedGroup = await serverAPI.postGroup(newGroup, token);
         dispatch(thunks.getTree());
     }
@@ -59,7 +59,8 @@ export function addNewGroup(newGroup) {
 
 export function updateGroup(groupToUpdate: object) {
     return async (dispatch, getState) => {
-        const {token, conversation} = getState();
+        const {token} = getState().usersRdcr;
+        const {conversation} = getState().groupsRdcr;
         const updatedGroup = await serverAPI.updateGroup(groupToUpdate, token, conversation);
         dispatch(thunks.getTree());
     }
@@ -67,7 +68,8 @@ export function updateGroup(groupToUpdate: object) {
 
 export function deleteGroup() {
     return async (dispatch, getState) => {
-        const {token, conversation} = getState();
+        const {token} = getState().usersRdcr;
+        const {conversation} = getState().groupsRdcr;
         await serverAPI.deleteGroup(token, conversation);
         dispatch(thunks.getTree());
     }
@@ -76,10 +78,10 @@ export function deleteGroup() {
 export function setConversation(selectedElementID: number) {
     return async (dispatch, getState) => {
         dispatch(actions.setConversation(selectedElementID));
-        const {token, conversation} = getState();
+        const {token} = getState().usersRdcr;
+        const {conversation} = getState().groupsRdcr;
         const messages = await serverAPI.getMessages(token, conversation);
         dispatch(actions.setMessages(messages));
-        // dispatch(thunks.setConversationUsers(selectedElementID));
     }
 }
 
@@ -101,7 +103,7 @@ export function addNewMessage(msgArray) {
 
 export function getPrivateGroups() {
     return async (dispatch, getState) => {
-        const {token} = getState();
+        const {token} = getState().usersRdcr;
         const users = await serverAPI.getPrivateGroups(token);
         dispatch(actions.setUsers(users));
     }
