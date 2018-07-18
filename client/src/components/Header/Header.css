@@ -4,7 +4,9 @@
     box-shadow: 2px 2px 3px #000;
     z-index: 10000;
     text-align: start;
-    padding: 0.2em 0.5em;
+    padding: 0.3em;
+    display: flex;
+    align-items: center;
 }
 
 .logo {
@@ -16,6 +18,7 @@
 }
 
 .logged-user {
+    flex: 1;
     display: inline-block;
     color: #25B99A;
     margin-left: 1em;
@@ -27,25 +30,19 @@
 
 .dots-wrapper {
     box-sizing: border-box;
-    float: right;
-    width: 2em;
     cursor: pointer;
-    padding: 0.5em 0.2em 0.5em 0.2em;
     outline: none;
 }
 
-.dot {
-    width: 20px;
-    height: 20px;
-    margin: auto auto;
-    background-image: radial-gradient(circle at center, #25B99A 7px, transparent 7px);
-    background-size: 20px 20px;
+.dots-wrapper svg {
+    fill: #25B99A;
+    zoom: 2;
 }
 
 .menu {
     position: absolute;
     right: 5px;
-    top: 90px;
+    top: 45px;
     background-color: #FFF;
     color: black;
     border: 1px solid #25B99A;
